@@ -10,7 +10,24 @@
       "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "styl"
+          "style": "styl",
+          "spec": false
+        },
+        "@schematics/angular:directive": {
+          "prefix": "fmp",
+          "spec": false
+        },
+        "@schematics/angular:module": {
+          "spec": false
+        },
+        "@schematics/angular:service": {
+          "spec": false
+        },
+        "@schematics/angular:pipe": {
+          "spec": false
+        },
+        "@schematics/angular:class": {
+          "spec": false
         }
       },
       "architect": {
@@ -24,11 +41,15 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
             ],
             "styles": [
-              "src/styles.styl"
+              "src/styles.styl",
+              "src/app/styles/global.styl",
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/app/styles"]
+            },
             "scripts": [],
             "es5BrowserSupport": true
           },
