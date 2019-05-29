@@ -1,0 +1,69 @@
+<div class="container" [ngClass]="{ active: useActive }">
+  <div class="card"></div>
+  <div class="card">
+    <h1 class="title">Sign In</h1>
+    <ng-container *ngTemplateOutlet="SignIn"></ng-container>
+  </div>
+  <div class="card alt">
+    <div class="toggle" [ngClass]="{ pointer: !useActive }" (click)="open()">
+      <mat-icon *ngIf="!useActive">add</mat-icon>
+    </div>
+    <h1 class="title">
+      Sign Up
+      <mat-icon class="close" *ngIf="useActive" (click)="close()"
+        >close</mat-icon
+      >
+    </h1>
+    <ng-container *ngTemplateOutlet="SignUp"></ng-container>
+  </div>
+</div>
+
+<!-- SignIn -->
+<ng-template #SignIn>
+  <form>
+    <div class="ipt-container">
+      <mat-form-field >
+        <mat-label>Username</mat-label>
+        <input matInput placeholder="username" />
+      </mat-form-field>
+    </div>
+    <div class="ipt-container">
+      <mat-form-field >
+        <mat-label>Password</mat-label>
+        <input matInput type="password" placeholder="password" />
+      </mat-form-field>
+    </div>
+
+    <div class="btn-container">
+      <button mat-flat-button color="primary">Sign In</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- SignUp -->
+<ng-template #SignUp>
+  <form>
+    <div class="ipt-container">
+      <mat-form-field >
+        <mat-label>Username</mat-label>
+        <input matInput placeholder="username" />
+      </mat-form-field>
+    </div>
+    <div class="ipt-container">
+      <mat-form-field >
+        <mat-label>Password</mat-label>
+        <input matInput type="password" placeholder="password" />
+      </mat-form-field>
+    </div>
+    <div class="ipt-container">
+      <mat-form-field >
+        <mat-label>Code</mat-label>
+        <input matInput placeholder="code" />
+      </mat-form-field>
+    </div>
+
+    <div class="btn-container">
+      <button mat-flat-button>Sign Up</button>
+    </div>
+  </form>
+</ng-template>

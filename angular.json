@@ -44,6 +44,8 @@
               "src/assets",
             ],
             "styles": [
+              "src/assets/theme/index.scss",
+              "src/assets/css/materialicons.css",
               "src/styles.styl",
               "src/app/styles/global.styl",
             ],

@@ -5,8 +5,17 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './sign.component.html',
   styleUrls: ['./sign.component.styl'],
 })
-export class LayoutSignComponent implements OnInit {
+export class SignComponent implements OnInit {
+  useActive = false;
+
   constructor() {}
+
+  open() {
+    this.useActive = true;
+  }
+  close() {
+    this.useActive = false;
+  }
 
   ngOnInit() {}
 }
