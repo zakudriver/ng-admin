@@ -8,11 +8,12 @@ import {
   HttpProgressEvent,
   HttpResponse,
   HttpUserEvent,
-  HttpErrorResponse,
+  HttpErrorResponse, HttpHeaders,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { mergeMap, catchError, switchMap, map } from 'rxjs/operators';
 import { APP_CONFIG, AppConfig } from '@app/config/app.config';
+import { TokenField } from '@app/constants';
 
 
 @Injectable({
@@ -23,6 +24,12 @@ export class NetService implements HttpInterceptor {
 
   constructor(@Inject(APP_CONFIG) private _config: AppConfig) {
     this._api = _config.api;
+  }
+
+  private _headers(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ' ${localStorage.getItem(TokenField) || ''}`
+    });
   }
 
   intercept(
@@ -40,6 +47,7 @@ export class NetService implements HttpInterceptor {
 
     const newReq = req.clone({
       url,
+      headers: this._headers()
     });
     return next.handle(newReq).pipe(
       mergeMap((event: any) => {

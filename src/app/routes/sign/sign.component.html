@@ -11,7 +11,8 @@
     <h1 class="title">
       Sign Up
       <mat-icon class="close" *ngIf="useActive" (click)="close()"
-        >close</mat-icon
+      >close
+      </mat-icon
       >
     </h1>
     <ng-container *ngTemplateOutlet="SignUp"></ng-container>
@@ -20,17 +21,19 @@
 
 <!-- SignIn -->
 <ng-template #SignIn>
-  <form>
+  <form [formGroup]="signInForm" (ngSubmit)="submitSignIn()">
     <div class="ipt-container">
-      <mat-form-field >
+      <mat-form-field>
         <mat-label>Username</mat-label>
-        <input matInput placeholder="username" />
+        <input matInput placeholder="username" formControlName="username"/>
+        <mat-error *ngIf="formErr('signIn', 'username')">{{formErr('signIn', 'username')}}</mat-error>
       </mat-form-field>
     </div>
     <div class="ipt-container">
-      <mat-form-field >
+      <mat-form-field>
         <mat-label>Password</mat-label>
-        <input matInput type="password" placeholder="password" />
+        <input matInput type="password" placeholder="password" formControlName="password"/>
+        <mat-error *ngIf="formErr('signIn', 'password')">{{formErr('signIn', 'password')}}</mat-error>
       </mat-form-field>
     </div>
 
@@ -42,24 +45,25 @@
 
 <!-- SignUp -->
 <ng-template #SignUp>
-  <form>
+  <form [formGroup]="signUpForm">
     <div class="ipt-container">
-      <mat-form-field >
+      <mat-form-field>
         <mat-label>Username</mat-label>
-        <input matInput placeholder="username" />
+        <input matInput placeholder="username" formControlName="username"/>
       </mat-form-field>
     </div>
     <div class="ipt-container">
-      <mat-form-field >
+      <mat-form-field>
         <mat-label>Password</mat-label>
-        <input matInput type="password" placeholder="password" />
+        <input matInput type="password" placeholder="password" formControlName="password"/>
       </mat-form-field>
     </div>
-    <div class="ipt-container">
-      <mat-form-field >
+    <div class="ipt-container code-container">
+      <mat-form-field>
         <mat-label>Code</mat-label>
-        <input matInput placeholder="code" />
+        <input matInput placeholder="code" formControlName="code"/>
       </mat-form-field>
+      <button mat-flat-button type="button">Send Code</button>
     </div>
 
     <div class="btn-container">

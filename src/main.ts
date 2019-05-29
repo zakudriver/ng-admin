@@ -7,6 +7,9 @@ import 'hammerjs';
 
 if (environment.production) {
   enableProdMode();
+
+  console.log = () => {};
+  console.error = () => {};
 }
 
 platformBrowserDynamic()
