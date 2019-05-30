@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClientService } from '@app/core/services/http-client.service';
 
 @Component({
-  selector   : 'app-sign',
+  selector: 'app-sign',
   templateUrl: './sign.component.html',
-  styleUrls  : ['./sign.component.styl'],
+  styleUrls: ['./sign.component.styl'],
 })
 export class SignComponent implements OnInit {
   useActive = false;
@@ -20,8 +21,7 @@ export class SignComponent implements OnInit {
     code: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  constructor(private _fb: FormBuilder) {
-  }
+  constructor(private _fb: FormBuilder, private _http: HttpClientService) {}
 
   open() {
     this.useActive = true;
@@ -29,6 +29,10 @@ export class SignComponent implements OnInit {
 
   close() {
     this.useActive = false;
+  }
+
+  sendCode() {
+    this._http;
   }
 
   formErr(form: string, field: string): string {
@@ -44,9 +48,7 @@ export class SignComponent implements OnInit {
 
   submitSignIn() {
     console.log(this.signInForm.value);
-
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }
