@@ -3,12 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClientService } from '@app/core/services/http-client.service';
 
 @Component({
-  selector: 'app-sign',
+  selector   : 'app-sign',
   templateUrl: './sign.component.html',
-  styleUrls: ['./sign.component.styl'],
+  styleUrls  : ['./sign.component.styl'],
 })
 export class SignComponent implements OnInit {
-  useActive = false;
+  useActive       = false;
+  useSignUpSend   = true;
+  useSignInSubmit = true;
 
   signInForm: FormGroup = this._fb.group({
     username: ['', [Validators.required, Validators.minLength(6)]],
@@ -18,10 +20,11 @@ export class SignComponent implements OnInit {
   signUpForm: FormGroup = this._fb.group({
     username: ['', [Validators.required, Validators.minLength(6)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    code: ['', [Validators.required, Validators.minLength(6)]],
+    code    : ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
   });
 
-  constructor(private _fb: FormBuilder, private _http: HttpClientService) {}
+  constructor(private _fb: FormBuilder, private _http: HttpClientService) {
+  }
 
   open() {
     this.useActive = true;
@@ -32,7 +35,10 @@ export class SignComponent implements OnInit {
   }
 
   sendCode() {
-    this._http;
+    console.log(this.signUpForm.value);
+    this._http.post('sendCode', '/user/code', this.signUpForm.value).subscribe(v => {
+      console.log(v);
+    });
   }
 
   formErr(form: string, field: string): string {
@@ -50,5 +56,22 @@ export class SignComponent implements OnInit {
     console.log(this.signInForm.value);
   }
 
-  ngOnInit() {}
+  private formStatusChanges() {
+    this.signUpForm.statusChanges.subscribe(
+      v => {
+        console.log(v);
+        this.useSignUpSend = v === 'INVALID';
+      }
+    );
+    this.signInForm.statusChanges.subscribe(
+      v => {
+        console.log(v);
+        this.useSignInSubmit = v === 'INVALID';
+      }
+    );
+  }
+
+  ngOnInit() {
+    this.formStatusChanges();
+  }
 }

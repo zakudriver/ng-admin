@@ -38,7 +38,7 @@
     </div>
 
     <div class="btn-container">
-      <button mat-flat-button color="primary">Sign In</button>
+      <button mat-flat-button color="primary" [disabled]="useSignInSubmit">Sign In</button>
     </div>
   </form>
 </ng-template>
@@ -63,7 +63,7 @@
         <mat-label>Code</mat-label>
         <input matInput placeholder="code" formControlName="code"/>
       </mat-form-field>
-      <button mat-flat-button type="button" (click)="sendCode()">Send Code</button>
+      <button mat-flat-button type="button" [disabled]="useSignUpSend" (click)="sendCode()">Send Code</button>
     </div>
 
     <div class="btn-container">

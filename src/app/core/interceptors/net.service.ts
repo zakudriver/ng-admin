@@ -11,7 +11,7 @@ import {
   HttpErrorResponse, HttpHeaders,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { mergeMap, catchError, switchMap, map } from 'rxjs/operators';
+import { mergeMap, catchError } from 'rxjs/operators';
 import { APP_CONFIG, AppConfig } from '@app/config/app.config';
 import { TokenField } from '@app/constants';
 

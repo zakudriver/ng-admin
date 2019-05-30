@@ -7,17 +7,20 @@ import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
 import { RoutesModule } from './routes/routes.module';
 import { APP_CONFIG_PROVIDER } from '@app/config/app.config';
+import { CoreModule } from '@app/core/core.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [
+  imports     : [
     BrowserModule,
     BrowserAnimationsModule,
     LayoutModule,
     RoutesModule,
     SharedModule,
+    CoreModule
   ],
-  providers: [APP_CONFIG_PROVIDER],
-  bootstrap: [AppComponent],
+  providers   : [APP_CONFIG_PROVIDER],
+  bootstrap   : [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

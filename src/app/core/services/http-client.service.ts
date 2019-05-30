@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { LoggerService } from './logger.service';
-import { map, tap, filter, catchError } from 'rxjs/operators';
-import { Observable, throwError, of } from 'rxjs';
+import { map, tap, catchError, filter } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { MatSnackBar } from '@angular/material';
 
 interface IRequestOpt {
   body?: any;
   headers?:
     | HttpHeaders
     | {
-        [header: string]: string | string[];
-      };
+    [header: string]: string | string[];
+  };
   observe?: 'body';
   params?:
     | HttpParams
     | {
-        [param: string]: string | string[];
-      };
+    [param: string]: string | string[];
+  };
   responseType?: 'json';
   reportProgress?: boolean;
   withCredentials?: boolean;
@@ -25,15 +26,16 @@ interface IRequestOpt {
 type Params =
   | HttpParams
   | {
-      [param: string]: string | string[];
-    }
+  [param: string]: string | string[];
+}
   | null;
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpClientService {
-  constructor(private _http: HttpClient, private _loggerSer: LoggerService) {}
+  constructor(private _http: HttpClient, private _loggerSer: LoggerService, private _snackBar: MatSnackBar) {
+  }
 
   private _handleOpt(params: Params, opt: IRequestOpt | null): IRequestOpt {
     const option = {};
@@ -55,27 +57,23 @@ export class HttpClientService {
     url: string,
     option: IRequestOpt,
     def?: T,
-  ): Observable<T> {
+  ): Observable<T | {}> {
     return this._http.request<IResponse<T>>(method, url, option).pipe(
-      map(d => {
-        if (d.code !== 0) {
-          throwError(d.msg);
+      tap(v => {
+        if (v.code !== 0) {
+          throw new Error(v.msg);
         }
-        return d;
+        this._loggerSer.responseLog(v, func);
       }),
-      // filter(d => d.code === 0),
-      map(d => d.data),
-      tap(d => {
-        this._loggerSer.responseLog(d, func);
-      }),
-      catchError(err => {
-        // TODO: message框
-        console.log(err);
+      map(v => v.data),
+      catchError((err: Error) => {
+        this._snackBar.open(err.message);
+        this._loggerSer.error(err.message);
         if (def) {
           return of(def);
         }
-        return of(err);
-      }),
+        return of();
+      })
     );
   }
 
@@ -84,9 +82,9 @@ export class HttpClientService {
     url: string,
     params?: Params,
     opt?: IRequestOpt,
-  ): Observable<IResponse<T>> {
+  ): Observable<T | {}> {
     const option = this._handleOpt(params, opt);
-    return this._handleRequest(func, 'get', url, option);
+    return this._handleRequest<T>(func, 'get', url, option);
   }
 
   post<T>(
@@ -94,9 +92,9 @@ export class HttpClientService {
     url: string,
     params?: Params,
     opt?: IRequestOpt,
-  ): Observable<IResponse<T>> {
+  ): Observable<T | {}> {
     const option = this._handleOpt(params, opt);
-    return this._handleRequest(func, 'post', url, option);
+    return this._handleRequest<T>(func, 'post', url, option);
   }
 
   put<T>(
@@ -104,9 +102,9 @@ export class HttpClientService {
     url: string,
     params?: Params,
     opt?: IRequestOpt,
-  ): Observable<IResponse<T>> {
+  ): Observable<T | {}> {
     const option = this._handleOpt(params, opt);
-    return this._handleRequest(func, 'put', url, option);
+    return this._handleRequest<T>(func, 'put', url, option);
   }
 
   delete<T>(
@@ -114,8 +112,8 @@ export class HttpClientService {
     url: string,
     params?: Params,
     opt?: IRequestOpt,
-  ): Observable<IResponse<T>> {
+  ): Observable<T | {}> {
     const option = this._handleOpt(params, opt);
-    return this._handleRequest(func, 'delete', url, option);
+    return this._handleRequest<T>(func, 'delete', url, option);
   }
 }

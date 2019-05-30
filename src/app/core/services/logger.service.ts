@@ -8,7 +8,8 @@ export class LoggerService {
     this.log(msg, color, background);
   }
 
-  constructor() {}
+  constructor() {
+  }
 
   log(msg: string, color = '#000', background = '#fff') {
     console.log(`%c ${msg}`, `color:${color};background:${background}`);
@@ -19,7 +20,7 @@ export class LoggerService {
     console.log(data);
   }
 
-  error(msg: string, obj = {}) {
-    console.error(msg, obj);
+  error(msg: string, params?: any) {
+    console.error(msg, params);
   }
 }

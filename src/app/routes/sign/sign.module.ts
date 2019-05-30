@@ -7,7 +7,8 @@ import { SharedModule } from '@app/shared/shared.module';
 
 @NgModule({
   declarations: [SignComponent],
-  imports: [CommonModule, SharedModule, SignRoutingModule],
-  exports: [],
+  imports     : [CommonModule, SignRoutingModule, SharedModule],
+  exports     : [],
 })
-export class SignModule {}
+export class SignModule {
+}
