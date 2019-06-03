@@ -60,13 +60,19 @@ export class SignComponent implements OnInit {
     this.signUpForm.statusChanges.subscribe(
       v => {
         console.log(v);
-        this.useSignUpSend = v === 'INVALID';
+        // this.useSignUpSend = v === 'INVALID';
+        const usernameStatus = this.signUpForm.get('username');
+        const passwordStatus = this.signUpForm.get('password');
+        this.useSignUpSend   = !(usernameStatus.status === 'VALID' && passwordStatus.status === 'VALID');
       }
     );
+
     this.signInForm.statusChanges.subscribe(
       v => {
         console.log(v);
-        this.useSignInSubmit = v === 'INVALID';
+        // this.~InSubmit = v === 'INVALID';
+        const r = this.signInForm.get(['username', 'password']);
+        console.log(r);
       }
     );
   }
