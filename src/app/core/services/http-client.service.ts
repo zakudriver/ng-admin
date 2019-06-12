@@ -37,13 +37,18 @@ export class HttpClientService {
   constructor(private _http: HttpClient, private _loggerSer: LoggerService, private _snackBar: MatSnackBar) {
   }
 
-  private _handleOpt(params: Params, opt: IRequestOpt | null): IRequestOpt {
+  private _handleOpt(method: string, params: Params, opt: IRequestOpt | null): IRequestOpt {
     const option = {};
-    if (params) {
+    if (method === 'get') {
       Object.assign(option, {
         params,
       });
+    } else {
+      Object.assign(option, {
+        body: params,
+      });
     }
+
     if (opt) {
       Object.assign(option, opt);
     }
@@ -57,22 +62,30 @@ export class HttpClientService {
     url: string,
     option: IRequestOpt,
     def?: T,
-  ): Observable<T | {}> {
+  ): Observable<IResponse<T>> {
     return this._http.request<IResponse<T>>(method, url, option).pipe(
       tap(v => {
         if (v.code !== 0) {
-          throw new Error(v.msg);
+          throw v.msg;
         }
         this._loggerSer.responseLog(v, func);
       }),
-      map(v => v.data),
-      catchError((err: Error) => {
-        this._snackBar.open(err.message);
-        this._loggerSer.error(err.message);
+      // map(v => v.data),
+      catchError((msg: string) => {
+        this._snackBar.open(msg);
+        this._loggerSer.error(msg);
         if (def) {
-          return of(def);
+          return of({
+            code: 1,
+            msg,
+            data: def
+          });
         }
-        return of();
+        return of({
+          code: 1,
+          msg,
+          data: null
+        });
       })
     );
   }
@@ -82,8 +95,8 @@ export class HttpClientService {
     url: string,
     params?: Params,
     opt?: IRequestOpt,
-  ): Observable<T | {}> {
-    const option = this._handleOpt(params, opt);
+  ): Observable<IResponse<T>> {
+    const option = this._handleOpt('get', params, opt);
     return this._handleRequest<T>(func, 'get', url, option);
   }
 
@@ -92,8 +105,8 @@ export class HttpClientService {
     url: string,
     params?: Params,
     opt?: IRequestOpt,
-  ): Observable<T | {}> {
-    const option = this._handleOpt(params, opt);
+  ): Observable<IResponse<T>> {
+    const option = this._handleOpt('post', params, opt);
     return this._handleRequest<T>(func, 'post', url, option);
   }
 
@@ -102,8 +115,8 @@ export class HttpClientService {
     url: string,
     params?: Params,
     opt?: IRequestOpt,
-  ): Observable<T | {}> {
-    const option = this._handleOpt(params, opt);
+  ): Observable<IResponse<T>> {
+    const option = this._handleOpt('put', params, opt);
     return this._handleRequest<T>(func, 'put', url, option);
   }
 
@@ -112,8 +125,8 @@ export class HttpClientService {
     url: string,
     params?: Params,
     opt?: IRequestOpt,
-  ): Observable<T | {}> {
-    const option = this._handleOpt(params, opt);
+  ): Observable<IResponse<T>> {
+    const option = this._handleOpt('delete', params, opt);
     return this._handleRequest<T>(func, 'delete', url, option);
   }
 }

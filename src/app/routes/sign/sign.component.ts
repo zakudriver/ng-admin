@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClientService } from '@app/core/services/http-client.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector   : 'app-sign',
@@ -23,7 +24,7 @@ export class SignComponent implements OnInit {
     code    : ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
   });
 
-  constructor(private _fb: FormBuilder, private _http: HttpClientService) {
+  constructor(private _fb: FormBuilder, private _http: HttpClientService, private _snackBar: MatSnackBar) {
   }
 
   open() {
@@ -35,9 +36,24 @@ export class SignComponent implements OnInit {
   }
 
   sendCode() {
-    console.log(this.signUpForm.value);
-    this._http.post('sendCode', '/user/code', this.signUpForm.value).subscribe(v => {
+    this._http.post<{ codeId: string }>('sendCode', '/user/code', this.signUpForm.value).subscribe(v => {
       console.log(v);
+      if (v.code === 0) {
+        this._snackBar.open(v.msg);
+        localStorage.setItem('codeId', v.data.codeId);
+      }
+    });
+  }
+
+  signUp() {
+    const params = Object.assign({codeId: localStorage.getItem('codeId')}, this.signUpForm.value);
+
+    this._http.post('sendCode', '/user/signup', params).subscribe(v => {
+      console.log(v);
+      this._snackBar.open(v.msg);
+      if (v.code === 0) {
+        this.useActive = false;
+      }
     });
   }
 
@@ -59,8 +75,6 @@ export class SignComponent implements OnInit {
   private formStatusChanges() {
     this.signUpForm.statusChanges.subscribe(
       v => {
-        console.log(v);
-        // this.useSignUpSend = v === 'INVALID';
         const usernameStatus = this.signUpForm.get('username');
         const passwordStatus = this.signUpForm.get('password');
         this.useSignUpSend   = !(usernameStatus.status === 'VALID' && passwordStatus.status === 'VALID');
@@ -69,10 +83,7 @@ export class SignComponent implements OnInit {
 
     this.signInForm.statusChanges.subscribe(
       v => {
-        console.log(v);
-        // this.~InSubmit = v === 'INVALID';
-        const r = this.signInForm.get(['username', 'password']);
-        console.log(r);
+        this.useSignInSubmit = v === 'INVALID';
       }
     );
   }
