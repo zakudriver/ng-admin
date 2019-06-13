@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClientService } from '@app/core/services/http-client.service';
 import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
+import { CacheService } from '@app/core/services/cache.service';
 
 @Component({
   selector   : 'app-sign',
@@ -24,7 +26,8 @@ export class SignComponent implements OnInit {
     code    : ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
   });
 
-  constructor(private _fb: FormBuilder, private _http: HttpClientService, private _snackBar: MatSnackBar) {
+  constructor(private _fb: FormBuilder, private _http: HttpClientService, private _snackBar: MatSnackBar, private _router: Router,
+              private _cacheSer: CacheService) {
   }
 
   open() {
@@ -37,22 +40,31 @@ export class SignComponent implements OnInit {
 
   sendCode() {
     this._http.post<{ codeId: string }>('sendCode', '/user/code', this.signUpForm.value).subscribe(v => {
-      console.log(v);
       if (v.code === 0) {
         this._snackBar.open(v.msg);
-        localStorage.setItem('codeId', v.data.codeId);
+        this._cacheSer.setSession('codeId', v.data.codeId);
       }
     });
   }
 
-  signUp() {
-    const params = Object.assign({codeId: localStorage.getItem('codeId')}, this.signUpForm.value);
+  submitSignUp() {
+    const codeId = this._cacheSer.getSession('codeId');
+    const params = Object.assign(codeId, this.signUpForm.value);
 
     this._http.post('sendCode', '/user/signup', params).subscribe(v => {
-      console.log(v);
       this._snackBar.open(v.msg);
       if (v.code === 0) {
         this.useActive = false;
+      }
+    });
+  }
+
+  submitSignIn() {
+    const params = this.signInForm.value;
+    this._http.post('sendCode', '/user/signin', params).subscribe(v => {
+      this._snackBar.open(v.msg);
+      if (v.code === 0) {
+        this._router.navigateByUrl('/');
       }
     });
   }
@@ -66,10 +78,6 @@ export class SignComponent implements OnInit {
       return 'You must enter min 6 length';
     }
     return '';
-  }
-
-  submitSignIn() {
-    console.log(this.signInForm.value);
   }
 
   private formStatusChanges() {

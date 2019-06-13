@@ -1,73 +1,156 @@
-<div class="container" [ngClass]="{ active: useActive }">
-  <div class="card"></div>
-  <div class="card">
-    <h1 class="title">Sign In</h1>
-    <ng-container *ngTemplateOutlet="SignIn"></ng-container>
+<div
+  class="container"
+  [ngClass]="{ active: useActive }">
+  <div
+    class="card"></div>
+  <div
+    class="card">
+    <h1
+      class="title">
+      Sign
+      In</h1>
+    <ng-container
+      *ngTemplateOutlet="SignIn"></ng-container>
   </div>
-  <div class="card alt">
-    <div class="toggle" [ngClass]="{ pointer: !useActive }" (click)="open()">
-      <mat-icon *ngIf="!useActive">add</mat-icon>
+  <div
+    class="card alt">
+    <div
+      class="toggle"
+      [ngClass]="{ pointer: !useActive }"
+      (click)="open()">
+      <mat-icon
+        *ngIf="!useActive">
+        add
+      </mat-icon>
     </div>
-    <h1 class="title">
-      Sign Up
-      <mat-icon class="close" *ngIf="useActive" (click)="close()"
-      >close
+    <h1
+      class="title">
+      Sign
+      Up
+      <mat-icon
+        class="close"
+        *ngIf="useActive"
+        (click)="close()"
+      >
+        close
       </mat-icon
       >
     </h1>
-    <ng-container *ngTemplateOutlet="SignUp"></ng-container>
+    <ng-container
+      *ngTemplateOutlet="SignUp"></ng-container>
   </div>
 </div>
 
 <!-- SignIn -->
-<ng-template #SignIn>
-  <form [formGroup]="signInForm" (ngSubmit)="submitSignIn()">
-    <div class="ipt-container">
+<ng-template
+  #SignIn>
+  <form
+    [formGroup]="signInForm"
+    (ngSubmit)="submitSignIn()">
+    <div
+      class="ipt-container">
       <mat-form-field>
-        <mat-label>Username</mat-label>
-        <input matInput placeholder="username" formControlName="username"/>
-        <mat-error *ngIf="formErr('signIn', 'username')">{{formErr('signIn', 'username')}}</mat-error>
+        <mat-label>
+          Username
+        </mat-label>
+        <input
+          matInput
+          placeholder="username"
+          formControlName="username"/>
+        <mat-error
+          *ngIf="formErr('signIn', 'username')">{{formErr('signIn', 'username')}}</mat-error>
       </mat-form-field>
     </div>
-    <div class="ipt-container">
+    <div
+      class="ipt-container">
       <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input matInput type="password" placeholder="password" formControlName="password"/>
-        <mat-error *ngIf="formErr('signIn', 'password')">{{formErr('signIn', 'password')}}</mat-error>
+        <mat-label>
+          Password
+        </mat-label>
+        <input
+          matInput
+          type="password"
+          placeholder="password"
+          formControlName="password"/>
+        <mat-error
+          *ngIf="formErr('signIn', 'password')">{{formErr('signIn', 'password')}}</mat-error>
       </mat-form-field>
     </div>
 
-    <div class="btn-container">
-      <button mat-flat-button color="primary" [disabled]="useSignInSubmit">Sign In</button>
+    <div
+      class="btn-container">
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="useSignInSubmit">
+        Sign
+        In
+      </button>
     </div>
   </form>
 </ng-template>
 
 <!-- SignUp -->
-<ng-template #SignUp>
-  <form [formGroup]="signUpForm">
-    <div class="ipt-container">
+<ng-template
+  #SignUp>
+  <form
+    [formGroup]="signUpForm"
+    (ngSubmit)="submitSignUp()"
+  >
+    <div
+      class="ipt-container">
       <mat-form-field>
-        <mat-label>Username</mat-label>
-        <input matInput placeholder="username" formControlName="username"/>
+        <mat-label>
+          Username
+        </mat-label>
+        <input
+          matInput
+          placeholder="username"
+          formControlName="username"/>
       </mat-form-field>
     </div>
-    <div class="ipt-container">
+    <div
+      class="ipt-container">
       <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input matInput type="password" placeholder="password" formControlName="password"/>
+        <mat-label>
+          Password
+        </mat-label>
+        <input
+          matInput
+          type="password"
+          placeholder="password"
+          formControlName="password"/>
       </mat-form-field>
     </div>
-    <div class="ipt-container code-container">
+    <div
+      class="ipt-container code-container">
       <mat-form-field>
-        <mat-label>Code</mat-label>
-        <input matInput placeholder="code" formControlName="code"/>
+        <mat-label>
+          Code
+        </mat-label>
+        <input
+          matInput
+          placeholder="code"
+          formControlName="code"/>
       </mat-form-field>
-      <button mat-flat-button type="button" [disabled]="useSignUpSend" (click)="sendCode()">Send Code</button>
+      <button
+        mat-flat-button
+        type="button"
+        [disabled]="useSignUpSend"
+        (click)="sendCode()">
+        Send
+        Code
+      </button>
     </div>
 
-    <div class="btn-container">
-      <button mat-flat-button (click)="signUp()">Sign Up</button>
+    <div
+      class="btn-container">
+      <button
+        mat-flat-button
+        (click)="signUp()">
+        Sign
+        Up
+      </button>
     </div>
   </form>
 </ng-template>
