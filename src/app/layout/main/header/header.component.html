@@ -1,3 +1,41 @@
-<p>
-  header works!
-</p>
+<header>
+  <div class="logo"></div>
+
+  <div class="menu">
+    <ul class="ul menu-l">
+      <li class="li">
+        <button mat-icon-button>
+          <mat-icon aria-label="menu">menu</mat-icon>
+        </button>
+      </li>
+      <li class="li">
+        <button mat-icon-button>
+          <mat-icon aria-label="menu">lock</mat-icon>
+        </button>
+      </li>
+    </ul>
+
+    <ul class="ul menu-r">
+      <li class="li">
+        <button mat-icon-button>
+          <mat-icon aria-label="menu">notifications</mat-icon>
+        </button>
+      </li>
+      <li class="li">
+        <button mat-icon-button>
+          <mat-icon aria-label="menu">settings</mat-icon>
+        </button>
+      </li>
+      <li class="li">
+        <button mat-button [matMenuTriggerFor]="menu">
+          <i class="avatar"></i>
+          Admin
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>Item 1</button>
+          <button mat-menu-item>Item 2</button>
+        </mat-menu>
+      </li>
+    </ul>
+  </div>
+</header>

@@ -3,13 +3,13 @@ import {
   MatButtonModule,
   MatIconModule,
   MatFormFieldModule,
-  MatInputModule, MatSnackBarModule,
+  MatInputModule, MatSnackBarModule, MatListModule, MatMenuModule
 } from '@angular/material';
 
 @NgModule({
   declarations: [],
-  imports     : [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSnackBarModule],
-  exports     : [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSnackBarModule],
+  imports     : [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSnackBarModule, MatListModule, MatMenuModule],
+  exports     : [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSnackBarModule, MatListModule, MatMenuModule],
 })
 export class MaterialModule {
 }
