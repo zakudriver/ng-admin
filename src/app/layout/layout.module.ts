@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LayoutMainComponent } from './main/main.component';
-import { HeaderComponent } from './main/header/header.component';
-import { SidebarComponent } from './main/sidebar/sidebar.component';
+import { HeaderComponent } from './header/header.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 import { SharedModule } from '@app/shared/shared.module';
+import { LayoutComponent } from './layout.component';
+import { LayoutService } from '@app/layout/layout.service';
 
 @NgModule({
-  declarations: [LayoutMainComponent, HeaderComponent, SidebarComponent],
-  imports: [CommonModule, SharedModule],
-  exports: [LayoutMainComponent],
+  declarations: [HeaderComponent, SidebarComponent, LayoutComponent],
+  imports     : [CommonModule, SharedModule],
+  exports     : [LayoutComponent],
+  providers   : [LayoutService]
 })
-export class LayoutModule {}
+export class LayoutModule {
+}

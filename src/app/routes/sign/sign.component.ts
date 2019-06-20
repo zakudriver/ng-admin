@@ -4,6 +4,7 @@ import { HttpClientService } from '@app/core/services/http-client.service';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { CacheService } from '@app/core/services/cache.service';
+import { LayoutService } from '@app/layout/layout.service';
 
 @Component({
   selector   : 'app-sign',

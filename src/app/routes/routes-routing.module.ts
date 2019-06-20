@@ -1,12 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from '@app/routes/not-found/not-found.component';
-import { LayoutMainComponent } from '@app/layout/main/main.component';
+import { LayoutComponent } from '@app/layout/layout.component';
+import { ArticleComponent } from '@app/routes/article/article.component';
+
+const main: Routes = [
+  {
+    path     : 'article',
+    component: ArticleComponent
+  }
+];
 
 const routes: Routes = [
   {
-    path: '',
-    component: LayoutMainComponent,
+    path     : '',
+    component: LayoutComponent,
+    children : main
   },
   {
     path        : 'sign',
