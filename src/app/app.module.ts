@@ -11,16 +11,8 @@ import { CoreModule } from '@app/core/core.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports     : [
-    BrowserModule,
-    BrowserAnimationsModule,
-    LayoutModule,
-    RoutesModule,
-    SharedModule,
-    CoreModule
-  ],
-  providers   : [APP_CONFIG_PROVIDER],
-  bootstrap   : [AppComponent],
+  imports: [BrowserModule, BrowserAnimationsModule, LayoutModule, RoutesModule, SharedModule, CoreModule],
+  providers: [APP_CONFIG_PROVIDER],
+  bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

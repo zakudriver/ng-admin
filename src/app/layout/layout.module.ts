@@ -8,9 +8,8 @@ import { LayoutService } from '@app/layout/layout.service';
 
 @NgModule({
   declarations: [HeaderComponent, SidebarComponent, LayoutComponent],
-  imports     : [CommonModule, SharedModule],
-  exports     : [LayoutComponent],
-  providers   : [LayoutService]
+  imports: [CommonModule, SharedModule],
+  exports: [LayoutComponent],
+  providers: [LayoutService]
 })
-export class LayoutModule {
-}
+export class LayoutModule {}
