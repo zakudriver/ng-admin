@@ -1,6 +1,5 @@
-<div class="sidebar" [@logoKine]="layoutSer.useSidebar?'open':'close'">
-
-  <ul>
+<div class="sidebar" [@sidebar]="layoutSer.useSidebar ? 'open' : 'close'">
+  <!-- <ul>
     <li class="menu">
       <button matRipple><span>menu</span>
       </button>
@@ -11,5 +10,6 @@
         <li><a matRipple>article</a></li>
       </ul>
     </li>
-  </ul>
+  </ul> -->
+  <app-menu></app-menu>
 </div>
