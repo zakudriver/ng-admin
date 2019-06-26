@@ -1,36 +1,34 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { IMenu } from './interface';
-
-interface IMenuTree extends IMenu {
-  children?: IMenu[];
-}
+import { Component, OnInit, Input, Output, EventEmitter, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { IMenu, IMenuTree } from './interface';
+import { MENU_CONFIG, MenuConfig } from '@app/config/menu.config';
 
 @Component({
   selector: 'app-menu',
   template: `
     <ul class="menu">
-      <li class="menu-item">
-        <app-submenu></app-submenu>
-        <app-submenu></app-submenu>
+      <li class="menu-item" *ngFor="let i of menuTree">
+        <app-submenu [submenu]="i" [selectedMenu]="selectedMenu" [openKey]="defaultOpenedMenu"></app-submenu>
       </li>
     </ul>
   `,
-  styleUrls: ['./menu.component.styl']
+  styleUrls: ['./menu.component.styl'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuComponent implements OnInit {
   @Input()
-  menu: IMenu;
+  selectedMenu: string = '';
 
   @Input()
-  selectedMenu: string[];
-
-  @Input()
-  openedMenu: string[];
+  defaultOpenedMenu: number[] = [];
 
   @Output()
   change = new EventEmitter<IMenu>();
 
-  constructor() {}
+  menuTree: IMenuTree[] = [];
+
+  constructor(@Inject(MENU_CONFIG) private _menu: MenuConfig) {
+    this.menuTree = this._handleTree(_menu);
+  }
 
   private _handleTree(menu: IMenuTree[], key: string = 'key', parentKey: string = 'parentKey'): IMenuTree[] {
     const r: IMenuTree[] = [];

@@ -1,10 +1,12 @@
 import { IMenu } from '@app/layout/sidebar/menu/interface';
+import { InjectionToken } from '@angular/core';
 
-export const menu: IMenu[] = [
+export const MENU_CONFIG = new InjectionToken<MenuConfig>('menu.config');
+
+export const menuConfig: IMenu[] = [
   {
     key: 1,
     name: 'Article',
-    // path: '/article',
     icon: ''
   },
   {
@@ -22,3 +24,10 @@ export const menu: IMenu[] = [
     icon: ''
   }
 ];
+
+export type MenuConfig = typeof menuConfig;
+
+export const MENU_CONFIG_PROVIDER = {
+  provide: MENU_CONFIG,
+  useValue: menuConfig
+};

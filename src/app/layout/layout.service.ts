@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class LayoutService {
-  useSidebar = true;
+  sidebarStatus = 'open';
 
   handleSidebar() {
-    this.useSidebar = !this.useSidebar;
+    this.sidebarStatus = this.sidebarStatus === 'open' ? 'close' : 'open';
   }
 
-  constructor() {
-  }
+  constructor() {}
 }

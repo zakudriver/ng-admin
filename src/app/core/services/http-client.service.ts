@@ -10,14 +10,14 @@ interface IRequestOpt {
   headers?:
     | HttpHeaders
     | {
-    [header: string]: string | string[];
-  };
+        [header: string]: string | string[];
+      };
   observe?: 'body';
   params?:
     | HttpParams
     | {
-    [param: string]: string | string[];
-  };
+        [param: string]: string | string[];
+      };
   responseType?: 'json';
   reportProgress?: boolean;
   withCredentials?: boolean;
@@ -26,27 +26,28 @@ interface IRequestOpt {
 type Params =
   | HttpParams
   | {
-  [param: string]: string | string[];
-}
+      [param: string]: string | string[];
+    }
   | null;
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class HttpClientService {
-  constructor(private _http: HttpClient, private _loggerSer: LoggerService, private _snackBar: MatSnackBar) {
-  }
+  constructor(private _http: HttpClient, private _loggerSer: LoggerService, private _snackBar: MatSnackBar) {}
 
-  private _handleOpt(method: string, params: Params, opt: IRequestOpt | null): IRequestOpt {
+  private _handleOpt(method: string, params: Params | undefined, opt: IRequestOpt | undefined): IRequestOpt {
     const option = {};
-    if (method === 'get') {
-      Object.assign(option, {
-        params,
-      });
-    } else {
-      Object.assign(option, {
-        body: params,
-      });
+    if (params) {
+      if (method === 'get') {
+        Object.assign(option, {
+          params
+        });
+      } else {
+        Object.assign(option, {
+          body: params
+        });
+      }
     }
 
     if (opt) {
@@ -61,7 +62,7 @@ export class HttpClientService {
     method: string,
     url: string,
     option: IRequestOpt,
-    def?: T,
+    def?: T
   ): Observable<IResponse<T>> {
     return this._http.request<IResponse<T>>(method, url, option).pipe(
       tap(v => {
@@ -85,47 +86,27 @@ export class HttpClientService {
           code: 1,
           msg,
           data: null
-        });
+        } as IResponse<any>);
       })
     );
   }
 
-  get<T>(
-    func: string,
-    url: string,
-    params?: Params,
-    opt?: IRequestOpt,
-  ): Observable<IResponse<T>> {
+  get<T>(func: string, url: string, params?: Params, opt?: IRequestOpt): Observable<IResponse<T>> {
     const option = this._handleOpt('get', params, opt);
     return this._handleRequest<T>(func, 'get', url, option);
   }
 
-  post<T>(
-    func: string,
-    url: string,
-    params?: Params,
-    opt?: IRequestOpt,
-  ): Observable<IResponse<T>> {
+  post<T>(func: string, url: string, params?: Params, opt?: IRequestOpt): Observable<IResponse<T>> {
     const option = this._handleOpt('post', params, opt);
     return this._handleRequest<T>(func, 'post', url, option);
   }
 
-  put<T>(
-    func: string,
-    url: string,
-    params?: Params,
-    opt?: IRequestOpt,
-  ): Observable<IResponse<T>> {
+  put<T>(func: string, url: string, params?: Params, opt?: IRequestOpt): Observable<IResponse<T>> {
     const option = this._handleOpt('put', params, opt);
     return this._handleRequest<T>(func, 'put', url, option);
   }
 
-  delete<T>(
-    func: string,
-    url: string,
-    params?: Params,
-    opt?: IRequestOpt,
-  ): Observable<IResponse<T>> {
+  delete<T>(func: string, url: string, params?: Params, opt?: IRequestOpt): Observable<IResponse<T>> {
     const option = this._handleOpt('delete', params, opt);
     return this._handleRequest<T>(func, 'delete', url, option);
   }

@@ -1,20 +1,16 @@
 <header>
-  <div class="logo"
-       [@logoKine]="layoutSer.useSidebar?'open':'close'"></div>
+  <div class="logo" [@sidebar]="layoutSer.sidebarStatus"></div>
 
   <div class="menu">
     <ul class="ul menu-l">
       <li class="li">
-        <button mat-icon-button
-                (click)="layoutSer.handleSidebar()">
-          <mat-icon aria-label="menu">menu
-          </mat-icon>
+        <button mat-icon-button (click)="layoutSer.handleSidebar()">
+          <mat-icon aria-label="menu">menu </mat-icon>
         </button>
       </li>
       <li class="li">
         <button mat-icon-button>
-          <mat-icon aria-label="lock">lock
-          </mat-icon>
+          <mat-icon aria-label="lock">lock </mat-icon>
         </button>
       </li>
     </ul>
@@ -35,8 +31,7 @@
         </button>
       </li>
       <li class="li">
-        <button mat-button
-                [matMenuTriggerFor]="menu">
+        <button mat-button [matMenuTriggerFor]="menu">
           <i class="avatar"></i>
           <span class="name">Admin</span>
         </button>

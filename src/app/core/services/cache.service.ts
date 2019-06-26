@@ -4,10 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class CacheService {
-  constructor() {
-  }
+  constructor() {}
 
-  private _parseValue(value: string) {
+  private _parseValue(value: string | null) {
     if (value) {
       try {
         const r = JSON.parse(value);

@@ -9,6 +9,7 @@ import { LayoutService } from '@app/layout/layout.service';
   animations: sidebarAnimate
 })
 export class SidebarComponent implements OnInit {
+  path = '/sign';
   constructor(public layoutSer: LayoutService) {}
 
   ngOnInit() {}

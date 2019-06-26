@@ -5,3 +5,7 @@ export interface IMenu {
   icon: string;
   path?: string;
 }
+
+export interface IMenuTree extends IMenu {
+  children?: IMenu[];
+}

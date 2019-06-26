@@ -1,4 +1,4 @@
-<div class="sidebar" [@sidebar]="layoutSer.useSidebar ? 'open' : 'close'">
+<div class="sidebar" [@sidebar]="layoutSer.sidebarStatus">
   <!-- <ul>
     <li class="menu">
       <button matRipple><span>menu</span>
@@ -12,4 +12,6 @@
     </li>
   </ul> -->
   <app-menu></app-menu>
+
+  <!-- <div *ngFor="let item of items"></div> -->
 </div>

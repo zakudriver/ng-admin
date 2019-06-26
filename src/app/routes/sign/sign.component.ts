@@ -7,36 +7,40 @@ import { CacheService } from '@app/core/services/cache.service';
 import { LayoutService } from '@app/layout/layout.service';
 
 @Component({
-  selector   : 'app-sign',
+  selector: 'app-sign',
   templateUrl: './sign.component.html',
-  styleUrls  : ['./sign.component.styl'],
+  styleUrls: ['./sign.component.styl']
 })
 export class SignComponent implements OnInit {
-  useActive       = false;
-  useSignUpSend   = true;
-  useSignInSubmit = true;
+  isActive = false;
+  isSignUpSend = true;
+  isSignInSubmit = true;
 
   signInForm: FormGroup = this._fb.group({
     username: ['', [Validators.required, Validators.minLength(6)]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   signUpForm: FormGroup = this._fb.group({
     username: ['', [Validators.required, Validators.minLength(6)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    code    : ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
+    code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
   });
 
-  constructor(private _fb: FormBuilder, private _http: HttpClientService, private _snackBar: MatSnackBar, private _router: Router,
-              private _cacheSer: CacheService) {
-  }
+  constructor(
+    private _fb: FormBuilder,
+    private _http: HttpClientService,
+    private _snackBar: MatSnackBar,
+    private _router: Router,
+    private _cacheSer: CacheService
+  ) {}
 
   open() {
-    this.useActive = true;
+    this.isActive = true;
   }
 
   close() {
-    this.useActive = false;
+    this.isActive = false;
   }
 
   sendCode() {
@@ -55,7 +59,7 @@ export class SignComponent implements OnInit {
     this._http.post('sendCode', '/user/signup', params).subscribe(v => {
       this._snackBar.open(v.msg);
       if (v.code === 0) {
-        this.useActive = false;
+        this.isActive = false;
       }
     });
   }
@@ -82,19 +86,17 @@ export class SignComponent implements OnInit {
   }
 
   private formStatusChanges() {
-    this.signUpForm.statusChanges.subscribe(
-      v => {
-        const usernameStatus = this.signUpForm.get('username');
-        const passwordStatus = this.signUpForm.get('password');
-        this.useSignUpSend   = !(usernameStatus.status === 'VALID' && passwordStatus.status === 'VALID');
+    this.signUpForm.statusChanges.subscribe(v => {
+      const usernameStatus = this.signUpForm.get('username');
+      const passwordStatus = this.signUpForm.get('password');
+      if (usernameStatus && passwordStatus) {
+        this.isSignUpSend = !(usernameStatus.status === 'VALID' && passwordStatus.status === 'VALID');
       }
-    );
+    });
 
-    this.signInForm.statusChanges.subscribe(
-      v => {
-        this.useSignInSubmit = v === 'INVALID';
-      }
-    );
+    this.signInForm.statusChanges.subscribe(v => {
+      this.isSignInSubmit = v === 'INVALID';
+    });
   }
 
   ngOnInit() {
