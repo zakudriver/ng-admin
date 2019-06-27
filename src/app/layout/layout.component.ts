@@ -2,15 +2,12 @@ import { Component, forwardRef, Inject, OnInit } from '@angular/core';
 import { LayoutService } from '@app/layout/layout.service';
 
 @Component({
-  selector   : 'app-layout',
+  selector: 'z-layout',
   templateUrl: './layout.component.html',
-  styleUrls  : ['./layout.component.styl']
+  styleUrls: ['./layout.component.styl']
 })
 export class LayoutComponent implements OnInit {
-  constructor(public layoutSer: LayoutService) {
-  }
+  constructor(public layoutSer: LayoutService) {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

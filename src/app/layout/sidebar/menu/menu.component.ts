@@ -14,11 +14,11 @@ import { IMenu, IMenuTree } from './interface';
 import { MENU_CONFIG, MenuConfig } from '@app/config/menu.config';
 
 @Component({
-  selector: 'app-menu',
+  selector: 'z-menu',
   template: `
     <ul class="ul menu" (click)="clickEntrust($event)">
       <li class="menu-item" *ngFor="let i of menuTree">
-        <app-submenu #MenuList [submenu]="i" [selectedMenu]="selectedMenu" [openKey]="defaultOpenedMenu"></app-submenu>
+        <z-submenu #MenuList [submenu]="i" [selectedMenu]="selectedMenu" [openKey]="defaultOpenedMenu"></z-submenu>
       </li>
     </ul>
   `,

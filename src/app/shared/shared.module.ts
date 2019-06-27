@@ -4,19 +4,11 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from './modules/material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DEFAULT_GLOBAL_OPTIONS } from '@app/shared/modules/material/global.config';
-import { BlackboxDirective } from './directives/blackbox.directive';
 
 @NgModule({
-  declarations: [BlackboxDirective],
-  imports     : [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MaterialModule,
-  ],
-  exports     : [RouterModule, FormsModule, ReactiveFormsModule, MaterialModule],
-  providers   : [...DEFAULT_GLOBAL_OPTIONS]
+  declarations: [],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MaterialModule],
+  exports: [RouterModule, FormsModule, ReactiveFormsModule, MaterialModule],
+  providers: [...DEFAULT_GLOBAL_OPTIONS]
 })
-export class SharedModule {
-}
+export class SharedModule {}

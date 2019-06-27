@@ -7,7 +7,7 @@ import { CacheService } from '@app/core/services/cache.service';
 import { LayoutService } from '@app/layout/layout.service';
 
 @Component({
-  selector: 'app-sign',
+  selector: 'z-sign',
   templateUrl: './sign.component.html',
   styleUrls: ['./sign.component.styl']
 })

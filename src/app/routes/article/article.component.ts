@@ -2,9 +2,8 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@ang
 import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
-  selector   : 'app-article',
+  selector: 'z-article',
   templateUrl: './article.component.html',
-  styleUrls  : ['./article.component.styl']
+  styleUrls: ['./article.component.styl']
 })
-export class ArticleComponent {
-}
+export class ArticleComponent {}
