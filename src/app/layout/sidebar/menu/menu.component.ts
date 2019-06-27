@@ -1,13 +1,24 @@
-import { Component, OnInit, Input, Output, EventEmitter, Inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  Inject,
+  ChangeDetectionStrategy,
+  ViewChild,
+  ViewChildren,
+  ElementRef
+} from '@angular/core';
 import { IMenu, IMenuTree } from './interface';
 import { MENU_CONFIG, MenuConfig } from '@app/config/menu.config';
 
 @Component({
   selector: 'app-menu',
   template: `
-    <ul class="menu">
+    <ul class="ul menu" (click)="clickEntrust($event)">
       <li class="menu-item" *ngFor="let i of menuTree">
-        <app-submenu [submenu]="i" [selectedMenu]="selectedMenu" [openKey]="defaultOpenedMenu"></app-submenu>
+        <app-submenu #MenuList [submenu]="i" [selectedMenu]="selectedMenu" [openKey]="defaultOpenedMenu"></app-submenu>
       </li>
     </ul>
   `,
@@ -19,10 +30,13 @@ export class MenuComponent implements OnInit {
   selectedMenu: string = '';
 
   @Input()
-  defaultOpenedMenu: number[] = [];
+  defaultOpenedMenu: string[] = [];
 
   @Output()
   change = new EventEmitter<IMenu>();
+
+  @ViewChildren('MenuList')
+  menuList: ElementRef<HTMLInputElement> = {} as ElementRef<HTMLInputElement>;
 
   menuTree: IMenuTree[] = [];
 
@@ -30,31 +44,50 @@ export class MenuComponent implements OnInit {
     this.menuTree = this._handleTree(_menu);
   }
 
-  private _handleTree(menu: IMenuTree[], key: string = 'key', parentKey: string = 'parentKey'): IMenuTree[] {
-    const r: IMenuTree[] = [];
-    const children: IMenuTree[] = [];
+  private _handleTree(menu: IMenu[], len: number = 1, r: IMenuTree[] = []): IMenuTree[] {
+    const children: IMenu[] = [];
+    const o: IMenu[] = [];
 
     menu.forEach(i => {
-      if (i[parentKey]) {
-        children.push({ ...i });
+      if (i.parentKey) {
+        if (i.parentKey.length === len) {
+          children.push({ ...i });
+        } else {
+          o.push({ ...i });
+        }
       } else {
         r.push({ ...i });
       }
     });
 
-    children.forEach(i => {
-      r.forEach(j => {
-        if (i[parentKey] === j[key]) {
-          if (j.children) {
-            j.children.push(i);
-          } else {
-            j.children = [i];
-          }
-        }
-      });
+    r.forEach(j => {
+      this._handleChildTree(j, children);
     });
 
+    if (o.length > 0) {
+      this._handleTree(o, len + 1, r);
+    }
+
     return r;
+  }
+
+  private _handleChildTree(node: IMenuTree, children: IMenu[]) {
+    if (node.children) {
+      node.children.forEach(i => {
+        this._handleChildTree(i, children);
+      });
+    } else {
+      node.children = [];
+      children.forEach(i => {
+        if (i.parentKey === node.key) {
+          node.children!.push(i);
+        }
+      });
+    }
+  }
+
+  clickEntrust(e: Event) {
+    console.log(this.menuList);
   }
 
   ngOnInit() {}

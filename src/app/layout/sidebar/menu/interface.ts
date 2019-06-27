@@ -1,6 +1,6 @@
 export interface IMenu {
-  key: number;
-  parentKey?: number;
+  key: string;
+  parentKey?: string;
   name: string;
   icon: string;
   path?: string;

@@ -5,16 +5,16 @@ import { IMenuTree } from '../interface';
 @Component({
   selector: 'app-submenu',
   template: `
-    <button class="menubtn" matRipple (click)="handleClick()">
+    <button class="menubtn" matRipple (click)="handleClick()" fmpBlackbox (fmpBlackboxChange)="change()">
       <span>{{ submenu.name }}</span>
     </button>
-    <ul class="submenu" @menu *ngIf="isOpen && submenu.children">
+    <ul class="ul submenu" @menu *ngIf="isOpen && submenu.children">
       <li *ngFor="let i of submenu.children">
-        <a class="a-color" [routerLink]="[i.path]">aaa</a>
+        <a class="a" [ngClass]="{ 'selected-color': isSelect }" [routerLink]="[i.path]">{{ i.name }}</a>
       </li>
     </ul>
   `,
-  styleUrls: ['../menu.component.styl'],
+  styleUrls: ['./submenu.component.styl', './submenu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: menuAnimate
 })
@@ -23,10 +23,10 @@ export class SubmenuComponent implements OnInit, OnChanges {
   submenu: IMenuTree = {} as IMenuTree;
 
   @Input()
-  selectedMenu: number = 0;
+  selectedMenu: string = '';
 
   @Input()
-  openKey: number[] = [];
+  openKey: string[] = [];
 
   isSelect = false;
   isOpen = false;
@@ -37,11 +37,15 @@ export class SubmenuComponent implements OnInit, OnChanges {
     this.isOpen = !this.isOpen;
   }
 
-  private _handleSelected(select: number) {
+  change() {
+    console.log('change');
+  }
+
+  private _handleSelected(select: string) {
     this.isSelect = this.submenu.key === select;
   }
 
-  private _handleOpen(opens: number[]) {
+  private _handleOpen(opens: string[]) {
     this.isOpen = opens.some(i => i === this.submenu.key);
   }
 
