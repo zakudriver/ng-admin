@@ -6,30 +6,37 @@ import {
   EventEmitter,
   ContentChildren,
   QueryList,
-  OnDestroy
+  OnDestroy,
+  Inject
 } from '@angular/core';
 import { ClassnameService } from '@app/core/services/classname.service';
 import { MenuService } from './menu.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MenuItemDirective } from './menu-item.directive';
+import { MENU_CONFIG, MenuConfig } from './menu.config';
 
 @Directive({
-  selector: '[zMenu]',
+  selector: '[z-menu]',
   providers: [ClassnameService, MenuService]
 })
 export class MenuDirective implements OnInit, OnDestroy {
   @Output()
-  readonly onClick = new EventEmitter<MenuItemDirective>();
+  readonly zClick = new EventEmitter<any>();
   @ContentChildren(MenuItemDirective, { descendants: true }) MenuItemDirectiveList: QueryList<
     MenuItemDirective
   > = {} as QueryList<MenuItemDirective>;
 
   private _destroy$ = new Subject();
-  constructor(private _eleRef: ElementRef, private _classnameSer: ClassnameService, private _menuSer: MenuService) {}
+  constructor(
+    private _eleRef: ElementRef,
+    private _classnameSer: ClassnameService,
+    private _menuSer: MenuService,
+    @Inject(MENU_CONFIG) private _menu: MenuConfig
+  ) {}
 
   private _setClassName() {
-    const prefix = 'zyhh-menu';
+    const prefix = this._menu.prefixName;
     this._classnameSer.updateClassName(this._eleRef.nativeElement, {
       [`${prefix}`]: true,
       [`${prefix}-root`]: true
@@ -40,7 +47,8 @@ export class MenuDirective implements OnInit, OnDestroy {
     this._setClassName();
 
     this._menuSer.handleMenuItemClick$.pipe(takeUntil(this._destroy$)).subscribe(v => {
-      this.onClick.emit(v);
+      this.zClick.emit(v);
+      this.MenuItemDirectiveList.forEach(i => i.setSelectedState(i === v));
     });
   }
 

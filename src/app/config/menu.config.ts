@@ -1,9 +1,8 @@
-import { IMenu } from '@app/layout/sidebar/menu/interface';
 import { InjectionToken } from '@angular/core';
 
 export const MENU_CONFIG = new InjectionToken<MenuConfig>('menu.config');
 
-export const menuConfig: IMenu[] = [
+export const menuConfig = [
   {
     key: '1',
     name: 'Article',

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { sidebarAnimate } from '@app/core/animations/sidebar';
 import { LayoutService } from '@app/layout/layout.service';
+import { MenuItemDirective } from '@app/shared/components/menu/menu-item.directive';
 
 @Component({
   selector: 'z-sidebar',
@@ -11,6 +12,10 @@ import { LayoutService } from '@app/layout/layout.service';
 export class SidebarComponent implements OnInit {
   path = '/sign';
   constructor(public layoutSer: LayoutService) {}
+
+  changeMenu(v: MenuItemDirective) {
+    console.log(v);
+  }
 
   ngOnInit() {}
 }

@@ -11,7 +11,12 @@
       </ul>
     </li>
   </ul> -->
-  <z-menu></z-menu>
+  <!-- <z-menu></z-menu> -->
+
+  <ul z-menu (zClick)="changeMenu($event)">
+    <li z-menu-item>test</li>
+    <li z-menu-item>test</li>
+  </ul>
 
   <!-- <div *ngFor="let item of items"></div> -->
 </div>
