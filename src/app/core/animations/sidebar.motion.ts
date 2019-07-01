@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-export const sidebarAnimate = [
+export const sidebarMotion = [
   trigger('sidebar', [
     state(
       'open',

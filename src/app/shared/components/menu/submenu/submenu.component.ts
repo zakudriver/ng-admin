@@ -4,22 +4,21 @@ import {
   ChangeDetectionStrategy,
   Input,
   TemplateRef,
-  ViewChild,
   ElementRef,
   OnDestroy,
   Inject,
   ChangeDetectorRef,
-  SimpleChanges
+  SimpleChanges,
+  Renderer2
 } from '@angular/core';
 import { SubmenuService } from './submenu.service';
 import { ClassnameService } from '@app/core/services/classname.service';
-import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
 import { InputBoolean } from '@app/core/util/convert';
 import { MenuService } from '../menu.service';
-import { collapseMotion } from '../menu.motion';
+import { collapseMotion } from '@app/core/animations/menu.motion';
 
 @Component({
   selector: '[z-submenu]',
@@ -34,9 +33,10 @@ export class SubmenuComponent implements OnInit, OnDestroy {
   @Input() @InputBoolean() open: boolean = false;
 
   @Input() title: string | TemplateRef<void> = '';
-  @ViewChild(CdkOverlayOrigin, { static: true, read: ElementRef }) cdkOverlayOrigin: ElementRef = {} as ElementRef;
+  @Input() subIndent: number = 16;
 
   expandState = 'collapsed';
+  paddingLeft = 0;
 
   private _isChildMenuSelected = false;
   private _isMouseHover = false;
@@ -48,7 +48,8 @@ export class SubmenuComponent implements OnInit, OnDestroy {
     private _submenuSer: SubmenuService,
     private _classnameSer: ClassnameService,
     private _cdr: ChangeDetectorRef,
-    @Inject(MENU_CONFIG) private _menu: MenuConfig
+    @Inject(MENU_CONFIG) private _menu: MenuConfig,
+    private _renderer: Renderer2
   ) {}
 
   setOpenState(open: boolean): void {
@@ -71,7 +72,7 @@ export class SubmenuComponent implements OnInit, OnDestroy {
     const prefix = this._menu.submenuPrefix;
 
     this._classnameSer.updateClassName(this._eleRef.nativeElement, {
-      [`${prefix}`]: true,
+      [`${prefix}-submenu`]: true,
       [`${prefix}-disabled`]: this.disabled,
       [`${prefix}-open`]: this.open,
       [`${prefix}-selected`]: this._isChildMenuSelected,
@@ -92,9 +93,18 @@ export class SubmenuComponent implements OnInit, OnDestroy {
       this._menuSer.menuOpen$.next(v);
     });
 
-    merge(this._submenuSer.level$, this._submenuSer.open$)
+    merge(this._submenuSer.level$, this._menuSer.indent$, this._submenuSer.open$)
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
+        const level = this._submenuSer.level$.value;
+        const padding = level > 1 ? this._submenuSer.subIndent$.value : this._menuSer.indent$.value;
+
+        if (padding) {
+          this._renderer.setStyle(this._eleRef.nativeElement, 'padding-left', `${padding}px`);
+        } else {
+          this._renderer.removeStyle(this._eleRef.nativeElement, 'padding-left');
+        }
+
         this._cdr.markForCheck();
       });
   }
@@ -106,6 +116,9 @@ export class SubmenuComponent implements OnInit, OnDestroy {
     if (changes.disabled) {
       this._submenuSer.disabled = this.disabled;
       this._setClassName();
+    }
+    if (changes.subIndent) {
+      this._submenuSer.setSubIndent(this.subIndent);
     }
   }
 

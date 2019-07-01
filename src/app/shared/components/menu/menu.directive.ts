@@ -8,7 +8,9 @@ import {
   QueryList,
   OnDestroy,
   Inject,
-  ViewContainerRef
+  Input,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import { ClassnameService } from '@app/core/services/classname.service';
 import { MenuService } from './menu.service';
@@ -21,23 +23,23 @@ import { MENU_CONFIG, MenuConfig } from './menu.config';
   selector: '[z-menu]',
   providers: [ClassnameService, MenuService]
 })
-export class MenuDirective implements OnInit, OnDestroy {
+export class MenuDirective implements OnChanges, OnInit, OnDestroy {
   @Output()
   readonly zClick = new EventEmitter<any>();
   @ContentChildren(MenuItemDirective, { descendants: true }) MenuItemDirectiveList: QueryList<
     MenuItemDirective
   > = {} as QueryList<MenuItemDirective>;
 
+  @Input()
+  indent: number = 40;
+
   private _destroy$ = new Subject();
   constructor(
     private _eleRef: ElementRef,
     private _classnameSer: ClassnameService,
     private _menuSer: MenuService,
-    @Inject(MENU_CONFIG) private _menu: MenuConfig,
-    private viewContainer: ViewContainerRef
-  ) {
-    console.log(viewContainer);
-  }
+    @Inject(MENU_CONFIG) private _menu: MenuConfig
+  ) {}
 
   private _setClassName() {
     const prefix = this._menu.menuPrefix;
@@ -45,6 +47,12 @@ export class MenuDirective implements OnInit, OnDestroy {
       [`${prefix}`]: true,
       [`${prefix}-root`]: true
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.indent) {
+      this._menuSer.setIndent(this.indent);
+    }
   }
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { sidebarAnimate } from '@app/core/animations/sidebar';
+import { sidebarMotion } from '@app/core/animations/sidebar.motion';
 import { LayoutService } from '@app/layout/layout.service';
 import { MenuItemDirective } from '@app/shared/components/menu/menu-item.directive';
 
@@ -7,7 +7,7 @@ import { MenuItemDirective } from '@app/shared/components/menu/menu-item.directi
   selector: 'z-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.styl'],
-  animations: sidebarAnimate
+  animations: sidebarMotion
 })
 export class SidebarComponent implements OnInit {
   path = '/sign';

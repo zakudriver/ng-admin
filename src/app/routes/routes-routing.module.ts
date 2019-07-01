@@ -6,30 +6,29 @@ import { ArticleComponent } from '@app/routes/article/article.component';
 
 const main: Routes = [
   {
-    path     : 'article',
+    path: 'article',
     component: ArticleComponent
   }
 ];
 
 const routes: Routes = [
   {
-    path     : '',
+    path: '',
     component: LayoutComponent,
-    children : main
+    children: main
   },
   {
-    path        : 'sign',
-    loadChildren: './sign/sign.module#SignModule',
+    path: 'sign',
+    loadChildren: () => import('@app/routes/sign/sign.module').then(v => v.SignModule)
   },
   {
-    path     : '**',
+    path: '**',
     component: NotFoundComponent
   }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class RoutesRoutingModule {
-}
+export class RoutesRoutingModule {}

@@ -43,10 +43,10 @@
               "src/app/styles/theme/index.scss",
               "src/assets/css/materialicons.css",
               "src/styles.styl",
-              "src/app/styles/global.styl"
+              "src/app/styles/index.styl"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/app/styles"]
+              "includePaths": ["src/app/styles", "src/app/shared/components"]
             },
             "scripts": [],
             "es5BrowserSupport": true

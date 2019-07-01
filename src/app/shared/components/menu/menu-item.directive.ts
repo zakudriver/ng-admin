@@ -1,9 +1,11 @@
-import { Directive, ElementRef, OnInit, Input, Inject, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Directive, ElementRef, OnInit, Input, Inject, OnDestroy, Optional, Renderer2 } from '@angular/core';
+import { Subject, merge, EMPTY } from 'rxjs';
 import { ClassnameService } from '@app/core/services/classname.service';
 import { MenuService } from './menu.service';
 import { InputBoolean } from '@app/core/util/convert';
 import { MENU_CONFIG, MenuConfig } from './menu.config';
+import { SubmenuService } from './submenu/submenu.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Directive({
   selector: '[z-menu-item]',
@@ -23,12 +25,15 @@ export class MenuItemDirective implements OnInit, OnDestroy {
 
   selected$ = new Subject<boolean>();
 
+  private _originalPadding = 0;
   private _destroy$ = new Subject();
   constructor(
     private _eleRef: ElementRef,
     private _classnameSer: ClassnameService,
     private _menuSer: MenuService,
-    @Inject(MENU_CONFIG) private _menu: MenuConfig
+    @Optional() private _submenuSer: SubmenuService,
+    @Inject(MENU_CONFIG) private _menu: MenuConfig,
+    private _renderer: Renderer2
   ) {}
 
   clickMenuItem(e: MouseEvent) {
@@ -37,9 +42,9 @@ export class MenuItemDirective implements OnInit, OnDestroy {
       e.stopPropagation();
       return;
     }
-    this._menuSer.onMenuItemClick(this);
+    this._menuSer.handleMenuItemClick(this);
     // if (this.nzSubmenuService) {
-    //   this.nzSubmenuService.onMenuItemClick();
+    //   this.nzSubmenuService.handleMenuItemClick();
     // }
   }
 
@@ -52,7 +57,7 @@ export class MenuItemDirective implements OnInit, OnDestroy {
   private _setClassName() {
     const prefix = this._menu.menuPrefix;
     this._classnameSer.updateClassName(this._eleRef.nativeElement, {
-      [`${prefix}`]: true,
+      [`${prefix}-item`]: true,
       [`${prefix}-selected`]: this.selected,
       [`${prefix}-disabled`]: this.disabled
     });
@@ -60,6 +65,23 @@ export class MenuItemDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._setClassName();
+
+    if (this._eleRef.nativeElement.style['padding-left']) {
+      this._originalPadding = parseInt(this._eleRef.nativeElement.style['padding-left'], 10);
+    }
+
+    merge(this._menuSer.indent$, this._submenuSer ? this._submenuSer.level$ : EMPTY)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(() => {
+        const level = this._submenuSer ? this._submenuSer.level$.value : 0;
+        const padding = level ? this._submenuSer.subIndent$.value : this._menuSer.indent$.value;
+
+        if (padding) {
+          this._renderer.setStyle(this._eleRef.nativeElement, 'padding-left', `${padding}px`);
+        } else {
+          this._renderer.removeStyle(this._eleRef.nativeElement, 'padding-left');
+        }
+      });
   }
 
   ngOnDestroy(): void {

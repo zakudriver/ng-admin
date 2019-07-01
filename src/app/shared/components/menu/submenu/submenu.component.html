@@ -1,6 +1,5 @@
 <div
-  cdkOverlayOrigin
-  #origin="cdkOverlayOrigin"
+  [style.paddingLeft.px]="paddingLeft"
   (mouseenter)="setMouseEnterState(true)"
   (mouseleave)="setMouseEnterState(false)"
   (click)="clickSubMenuTitle()"
