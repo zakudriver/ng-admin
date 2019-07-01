@@ -7,7 +7,8 @@ import {
   ContentChildren,
   QueryList,
   OnDestroy,
-  Inject
+  Inject,
+  ViewContainerRef
 } from '@angular/core';
 import { ClassnameService } from '@app/core/services/classname.service';
 import { MenuService } from './menu.service';
@@ -32,11 +33,14 @@ export class MenuDirective implements OnInit, OnDestroy {
     private _eleRef: ElementRef,
     private _classnameSer: ClassnameService,
     private _menuSer: MenuService,
-    @Inject(MENU_CONFIG) private _menu: MenuConfig
-  ) {}
+    @Inject(MENU_CONFIG) private _menu: MenuConfig,
+    private viewContainer: ViewContainerRef
+  ) {
+    console.log(viewContainer);
+  }
 
   private _setClassName() {
-    const prefix = this._menu.prefixName;
+    const prefix = this._menu.menuPrefix;
     this._classnameSer.updateClassName(this._eleRef.nativeElement, {
       [`${prefix}`]: true,
       [`${prefix}-root`]: true

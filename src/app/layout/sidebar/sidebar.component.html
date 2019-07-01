@@ -14,6 +14,14 @@
   <!-- <z-menu></z-menu> -->
 
   <ul z-menu (zClick)="changeMenu($event)">
+    <li z-submenu>
+      <span title>test title</span>
+      <ul>
+        <li z-menu-item>
+          subtest
+        </li>
+      </ul>
+    </li>
     <li z-menu-item>test</li>
     <li z-menu-item>test</li>
   </ul>

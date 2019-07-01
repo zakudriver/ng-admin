@@ -4,11 +4,12 @@ import { MenuItemDirective } from './menu-item.directive';
 import { MenuDirective } from './menu.directive';
 import { MENU_CONFIG_PROVIDE } from './menu.config';
 import { SubmenuComponent } from './submenu/submenu.component';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
   declarations: [MenuItemDirective, MenuDirective, SubmenuComponent],
-  imports: [CommonModule],
-  exports: [MenuItemDirective, MenuDirective],
+  imports: [CommonModule, OverlayModule],
+  exports: [MenuItemDirective, MenuDirective, SubmenuComponent],
   providers: [MENU_CONFIG_PROVIDE]
 })
 export class MenuModule {}

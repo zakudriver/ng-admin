@@ -3,7 +3,8 @@ import { InjectionToken } from '@angular/core';
 export const MENU_CONFIG = new InjectionToken<MenuConfig>('menu.config');
 
 export const menuConfig = {
-  prefixName: 'zyhh-menu'
+  menuPrefix: 'zyhh-menu',
+  submenuPrefix: 'zyhh-submenu'
 };
 export type MenuConfig = typeof menuConfig;
 

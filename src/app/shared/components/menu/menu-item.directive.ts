@@ -50,7 +50,7 @@ export class MenuItemDirective implements OnInit, OnDestroy {
   }
 
   private _setClassName() {
-    const prefix = this._menu.prefixName;
+    const prefix = this._menu.menuPrefix;
     this._classnameSer.updateClassName(this._eleRef.nativeElement, {
       [`${prefix}`]: true,
       [`${prefix}-selected`]: this.selected,
