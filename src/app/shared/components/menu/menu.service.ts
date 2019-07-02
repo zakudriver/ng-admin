@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { MenuItemDirective } from './menu-item.directive';
+import { MenuItemDirective } from './menu-item/menu-item.directive';
 
 @Injectable()
 export class MenuService {

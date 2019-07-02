@@ -10,24 +10,15 @@
       "prefix": "z",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "styl",
-          "spec": false
+          "style": "styl"
         },
-        "@schematics/angular:directive": {
-          "spec": false
-        },
+        "@schematics/angular:directive": {},
         "@schematics/angular:module": {
           "spec": false
         },
-        "@schematics/angular:service": {
-          "spec": false
-        },
-        "@schematics/angular:pipe": {
-          "spec": false
-        },
-        "@schematics/angular:class": {
-          "spec": false
-        }
+        "@schematics/angular:service": {},
+        "@schematics/angular:pipe": {},
+        "@schematics/angular:class": {}
       },
       "architect": {
         "build": {

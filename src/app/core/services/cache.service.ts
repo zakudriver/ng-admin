@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class CacheService {
   constructor() {}
 
-  private _parseValue(value: string | null) {
+  private _parseFromString(value: string | null) {
     if (value) {
       try {
         const r = JSON.parse(value);
@@ -23,26 +23,34 @@ export class CacheService {
     }
   }
 
-  setSession(key: string, value: string) {
-    sessionStorage.setItem(key, value);
+  private _parseToString(value: any): string {
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    return JSON.stringify(value);
+  }
+
+  setSession(key: string, value: any) {
+    sessionStorage.setItem(key, this._parseToString(value));
   }
 
   getSession(key: string) {
     const v = sessionStorage.getItem(key);
-    return this._parseValue(v);
+    return this._parseFromString(v);
   }
 
   rmSession(key: string) {
     sessionStorage.removeItem(key);
   }
 
-  setLocal(key: string, value: string) {
-    localStorage.setItem(key, value);
+  setLocal(key: string, value: any) {
+    localStorage.setItem(key, this._parseToString(value));
   }
 
   getLocal(key: string): string | null {
     const v = localStorage.getItem(key);
-    return this._parseValue(v);
+    return this._parseFromString(v);
   }
 
   rmLocal(key: string) {

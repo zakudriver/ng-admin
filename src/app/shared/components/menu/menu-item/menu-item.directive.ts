@@ -1,10 +1,10 @@
 import { Directive, ElementRef, OnInit, Input, Inject, OnDestroy, Optional, Renderer2 } from '@angular/core';
 import { Subject, merge, EMPTY } from 'rxjs';
 import { ClassnameService } from '@app/core/services/classname.service';
-import { MenuService } from './menu.service';
-import { InputBoolean } from '@app/core/util/convert';
-import { MENU_CONFIG, MenuConfig } from './menu.config';
-import { SubmenuService } from './submenu/submenu.service';
+import { MenuService } from '../menu.service';
+import { InputBoolean } from '@app/core/utils/convert';
+import { MENU_CONFIG, MenuConfig } from '../menu.config';
+import { SubmenuService } from '../submenu/submenu.service';
 import { takeUntil } from 'rxjs/operators';
 
 @Directive({

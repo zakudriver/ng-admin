@@ -16,7 +16,7 @@ import { ClassnameService } from '@app/core/services/classname.service';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
-import { InputBoolean } from '@app/core/util/convert';
+import { InputBoolean } from '@app/core/utils/convert';
 import { MenuService } from '../menu.service';
 import { collapseMotion } from '@app/core/animations/menu.motion';
 
@@ -52,13 +52,13 @@ export class SubmenuComponent implements OnInit, OnDestroy {
     private _renderer: Renderer2
   ) {}
 
-  setOpenState(open: boolean): void {
+  private _setOpenState(open: boolean): void {
     this._submenuSer.setOpenState(open);
   }
 
   clickSubMenuTitle(): void {
     if (!this.disabled) {
-      this.setOpenState(!this.open);
+      this._setOpenState(!this.open);
     }
   }
 

@@ -16,7 +16,7 @@ import { ClassnameService } from '@app/core/services/classname.service';
 import { MenuService } from './menu.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { MenuItemDirective } from './menu-item.directive';
+import { MenuItemDirective } from './menu-item/menu-item.directive';
 import { MENU_CONFIG, MenuConfig } from './menu.config';
 
 @Directive({
