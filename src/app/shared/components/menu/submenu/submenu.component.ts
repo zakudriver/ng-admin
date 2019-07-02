@@ -9,7 +9,8 @@ import {
   Inject,
   ChangeDetectorRef,
   SimpleChanges,
-  Renderer2
+  Renderer2,
+  ViewChild
 } from '@angular/core';
 import { SubmenuService } from './submenu.service';
 import { ClassnameService } from '@app/core/services/classname.service';
@@ -26,7 +27,10 @@ import { collapseMotion } from '@app/core/animations/menu.motion';
   styleUrls: ['./submenu.component.styl'],
   providers: [ClassnameService, SubmenuService],
   animations: [collapseMotion],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(click)': 'clickSubMenuTitle($event)'
+  }
 })
 export class SubmenuComponent implements OnInit, OnDestroy {
   @Input() @InputBoolean() disabled: boolean = false;
@@ -35,28 +39,31 @@ export class SubmenuComponent implements OnInit, OnDestroy {
   @Input() title: string | TemplateRef<void> = '';
   @Input() subIndent: number = 16;
 
+  @ViewChild('SubMenu', { read: ElementRef, static: false })
+  subMenuEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
+
   expandState = 'collapsed';
   paddingLeft = 0;
+  classMap = {};
 
   private _isChildMenuSelected = false;
   private _isMouseHover = false;
 
   private _destroy$ = new Subject<void>();
   constructor(
-    private _eleRef: ElementRef,
     private _menuSer: MenuService,
     private _submenuSer: SubmenuService,
     private _classnameSer: ClassnameService,
     private _cdr: ChangeDetectorRef,
-    @Inject(MENU_CONFIG) private _menu: MenuConfig,
-    private _renderer: Renderer2
+    @Inject(MENU_CONFIG) private _menu: MenuConfig // private _renderer: Renderer2
   ) {}
 
   private _setOpenState(open: boolean): void {
     this._submenuSer.setOpenState(open);
   }
 
-  clickSubMenuTitle(): void {
+  clickSubMenuTitle(e: Event): void {
+    e.stopPropagation();
     if (!this.disabled) {
       this._setOpenState(!this.open);
     }
@@ -71,17 +78,28 @@ export class SubmenuComponent implements OnInit, OnDestroy {
   private _setClassName(): void {
     const prefix = this._menu.submenuPrefix;
 
-    this._classnameSer.updateClassName(this._eleRef.nativeElement, {
+    // this._classnameSer.updateClassName(this.subMenuEle.nativeElement, {
+    //   [`${prefix}-submenu`]: true,
+    //   [`${prefix}-disabled`]: this.disabled,
+    //   [`${prefix}-open`]: this.open,
+    //   [`${prefix}-selected`]: this._isChildMenuSelected,
+    //   [`${prefix}-active`]: this._isMouseHover && !this.disabled
+    // });
+
+    this.classMap = {
       [`${prefix}-submenu`]: true,
       [`${prefix}-disabled`]: this.disabled,
       [`${prefix}-open`]: this.open,
       [`${prefix}-selected`]: this._isChildMenuSelected,
       [`${prefix}-active`]: this._isMouseHover && !this.disabled
-    });
+    };
   }
 
   ngOnInit() {
-    this._submenuSer.open$.pipe(takeUntil(this._destroy$)).subscribe(v => {
+    const { indent$, menuOpen$ } = this._menuSer;
+    const { open$, subMenuOpen$, level$, subIndent$ } = this._submenuSer;
+
+    open$.pipe(takeUntil(this._destroy$)).subscribe(v => {
       if (v !== this.open) {
         this.open = v;
       }
@@ -89,21 +107,14 @@ export class SubmenuComponent implements OnInit, OnDestroy {
       this._setClassName();
     });
 
-    this._submenuSer.subMenuOpen$.pipe(takeUntil(this._destroy$)).subscribe(v => {
-      this._menuSer.menuOpen$.next(v);
+    subMenuOpen$.pipe(takeUntil(this._destroy$)).subscribe(v => {
+      menuOpen$.next(v);
     });
 
-    merge(this._submenuSer.level$, this._menuSer.indent$, this._submenuSer.open$)
+    merge(level$, indent$, open$)
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
-        const level = this._submenuSer.level$.value;
-        const padding = level > 1 ? this._submenuSer.subIndent$.value : this._menuSer.indent$.value;
-
-        if (padding) {
-          this._renderer.setStyle(this._eleRef.nativeElement, 'padding-left', `${padding}px`);
-        } else {
-          this._renderer.removeStyle(this._eleRef.nativeElement, 'padding-left');
-        }
+        this.paddingLeft = indent$.value + subIndent$.value * (level$.value - 1);
 
         this._cdr.markForCheck();
       });

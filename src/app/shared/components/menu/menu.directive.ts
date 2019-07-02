@@ -16,8 +16,8 @@ import { ClassnameService } from '@app/core/services/classname.service';
 import { MenuService } from './menu.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { MenuItemDirective } from './menu-item/menu-item.directive';
 import { MENU_CONFIG, MenuConfig } from './menu.config';
+import { MenuItemComponent } from './menu-item/menu-item.component';
 
 @Directive({
   selector: '[z-menu]',
@@ -26,9 +26,9 @@ import { MENU_CONFIG, MenuConfig } from './menu.config';
 export class MenuDirective implements OnChanges, OnInit, OnDestroy {
   @Output()
   readonly zClick = new EventEmitter<any>();
-  @ContentChildren(MenuItemDirective, { descendants: true }) MenuItemDirectiveList: QueryList<
-    MenuItemDirective
-  > = {} as QueryList<MenuItemDirective>;
+  @ContentChildren(MenuItemComponent, { descendants: true }) menuItemList: QueryList<
+    MenuItemComponent
+  > = {} as QueryList<MenuItemComponent>;
 
   @Input()
   indent: number = 40;
@@ -60,7 +60,7 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
 
     this._menuSer.handleMenuItemClick$.pipe(takeUntil(this._destroy$)).subscribe(v => {
       this.zClick.emit(v);
-      this.MenuItemDirectiveList.forEach(i => i.setSelectedState(i === v));
+      this.menuItemList.forEach(i => i.setSelectedState(i === v));
     });
   }
 

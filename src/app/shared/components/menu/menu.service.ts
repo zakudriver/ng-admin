@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { MenuItemDirective } from './menu-item/menu-item.directive';
+import { MenuItemComponent } from './menu-item/menu-item.component';
 
 @Injectable()
 export class MenuService {
-  handleMenuItemClick$ = new Subject<MenuItemDirective>();
+  handleMenuItemClick$ = new Subject<MenuItemComponent>();
   menuOpen$ = new BehaviorSubject<boolean>(false);
   indent$ = new BehaviorSubject<number>(40);
 
   constructor() {}
 
-  handleMenuItemClick(menu: MenuItemDirective) {
+  handleMenuItemClick(menu: MenuItemComponent) {
     this.handleMenuItemClick$.next(menu);
   }
 

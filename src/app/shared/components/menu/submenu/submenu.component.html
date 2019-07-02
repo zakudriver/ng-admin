@@ -1,8 +1,11 @@
 <div
+  #SubMenu
+  class="zyhh-menu-submenu"
+  [ngClass]="classMap"
   [style.paddingLeft.px]="paddingLeft"
   (mouseenter)="setMouseEnterState(true)"
   (mouseleave)="setMouseEnterState(false)"
-  (click)="clickSubMenuTitle()"
+  matRipple
 >
   <!-- <i nz-icon [nzType]="nzIcon" *ngIf="nzIcon"></i> -->
   <!-- <ng-container *nzStringTemplateOutlet="nzTitle"
