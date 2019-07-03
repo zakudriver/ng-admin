@@ -8,16 +8,16 @@
   matRipple
 >
   <!-- <i nz-icon [nzType]="nzIcon" *ngIf="nzIcon"></i> -->
-  <!-- <ng-container *nzStringTemplateOutlet="nzTitle"
-    ><span>{{ nzTitle }}</span></ng-container
-  > -->
+  <ng-container *zStringTemplateOutlet="title; context: { a: 1 }"
+    ><span>{{ title }}</span></ng-container
+  >
   <ng-content select="[title]" *ngIf="!title"></ng-content>
 </div>
 
 <ul [@collapseMotion]="expandState" class="ant-menu ant-menu-inline ant-menu-sub">
-  <ng-template [ngTemplateOutlet]="subMenuTemplate"></ng-template>
+  <ng-template [ngTemplateOutlet]="SubMenuTemplate"></ng-template>
 </ul>
 
-<ng-template #subMenuTemplate>
+<ng-template #SubMenuTemplate>
   <ng-content></ng-content>
 </ng-template>

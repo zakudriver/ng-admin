@@ -14,8 +14,8 @@
   <!-- <z-menu></z-menu> -->
 
   <ul z-menu (zClick)="changeMenu($event)">
-    <li z-submenu>
-      <span title>test title</span>
+    <li z-submenu [title]="title">
+      <!-- <span #title>test title</span> -->
       <ul>
         <li z-menu-item>
           subtest
@@ -42,3 +42,7 @@
 
   <!-- <div *ngFor="let item of items"></div> -->
 </div>
+
+<ng-template #title>
+  <span>test</span>
+</ng-template>

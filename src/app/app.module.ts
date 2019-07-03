@@ -7,11 +7,11 @@ import { LayoutModule } from './layout/layout.module';
 import { SharedModule } from './shared/shared.module';
 import { RoutesModule } from './routes/routes.module';
 import { APP_CONFIG_PROVIDER } from '@app/config/app.config';
-import { CoreModule } from '@app/core/core.module';
+import { NetModule } from './core/net/net.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, BrowserAnimationsModule, LayoutModule, RoutesModule, SharedModule, CoreModule],
+  imports: [BrowserModule, BrowserAnimationsModule, LayoutModule, RoutesModule, SharedModule, NetModule],
   providers: [APP_CONFIG_PROVIDER],
   bootstrap: [AppComponent]
 })
