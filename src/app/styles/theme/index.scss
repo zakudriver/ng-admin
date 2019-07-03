@@ -19,5 +19,3 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .dark-theme {
   @include angular-material-theme($dark-theme);
 }
-
-$primary: mat-color($app-primary);

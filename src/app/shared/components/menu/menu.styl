@@ -8,6 +8,22 @@ menuPrefix = $prefix + '-menu'
     padding 0
     list-style none
 
-  &-item, &-submenu
+  &-item, &-sub
     padding 6px 8px
     cursor pointer
+
+    &:hover
+      background-color rgba(0, 0, 0, 0.08)
+
+  &-sub [title]
+    line-height 1.75
+
+  &-label
+    line-height 1.75
+
+  &-submenu > ul
+    padding 8px 0
+
+  &-selected
+    font-weight 500
+    background-color rgba(0, 0, 0, 0.05)

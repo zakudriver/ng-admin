@@ -5,11 +5,11 @@ import { sidebarMotion } from '@app/core/animations/sidebar.motion';
 @Component({
   selector: 'z-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.styl', './header.component.scss'],
+  styleUrls: ['./header.component.styl'],
   animations: sidebarMotion
 })
 export class HeaderComponent implements OnInit {
-  constructor(public layoutSer: LayoutService) {}
+  constructor() {}
 
   ngOnInit() {}
 }

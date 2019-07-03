@@ -1,6 +1,6 @@
 <div
   #SubMenu
-  class="zyhh-menu-submenu"
+  class="zyhh-menu-sub"
   [ngClass]="classMap"
   [style.paddingLeft.px]="paddingLeft"
   (mouseenter)="setMouseEnterState(true)"
@@ -8,15 +8,15 @@
   matRipple
 >
   <!-- <i nz-icon [nzType]="nzIcon" *ngIf="nzIcon"></i> -->
-  <ng-container *zStringTemplateOutlet="title; context: { a: 1 }"
-    ><span>{{ title }}</span></ng-container
+  <ng-container *zStringTemplateOutlet="title"
+    ><span class="zyhh-menu-label">{{ title }}</span></ng-container
   >
   <ng-content select="[title]" *ngIf="!title"></ng-content>
 </div>
 
-<ul [@collapseMotion]="expandState" class="ant-menu ant-menu-inline ant-menu-sub">
+<div [@collapseMotion]="expandState" class="zyhh-menu-submenu">
   <ng-template [ngTemplateOutlet]="SubMenuTemplate"></ng-template>
-</ul>
+</div>
 
 <ng-template #SubMenuTemplate>
   <ng-content></ng-content>

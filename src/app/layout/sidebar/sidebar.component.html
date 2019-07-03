@@ -1,21 +1,7 @@
-<div class="sidebar" [@sidebar]="layoutSer.sidebarStatus">
-  <!-- <ul>
-    <li class="menu">
-      <button ><span>menu</span>
-      </button>
-
-      <ul class="submenu">
-        <li><a >article</a></li>
-        <li><a >article</a></li>
-        <li><a >article</a></li>
-      </ul>
-    </li>
-  </ul> -->
-  <!-- <z-menu></z-menu> -->
-
+<div class="sidebar">
   <ul z-menu (zClick)="changeMenu($event)">
-    <li z-submenu [title]="title">
-      <!-- <span #title>test title</span> -->
+    <li z-submenu>
+      <span title>test title</span>
       <ul>
         <li z-menu-item>
           subtest
@@ -39,10 +25,4 @@
     <li z-menu-item>test</li>
     <li z-menu-item>test</li>
   </ul>
-
-  <!-- <div *ngFor="let item of items"></div> -->
 </div>
-
-<ng-template #title>
-  <span>test</span>
-</ng-template>

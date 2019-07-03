@@ -11,14 +11,15 @@ import { takeUntil } from 'rxjs/operators';
   selector: '[z-menu-item]',
   template: `
     <div #MenuItem matRipple [style.paddingLeft.px]="paddingLeft" [ngClass]="classMap">
-      <ng-content></ng-content>
+      <span class="zyhh-menu-label">
+        <ng-content></ng-content>
+      </span>
     </div>
   `,
   styleUrls: ['./menu-item.component.styl'],
   host: {
     '(click)': 'clickMenuItem($event)'
-  },
-  providers: [ClassnameService]
+  }
 })
 export class MenuItemComponent implements OnInit, OnDestroy {
   @Input()
@@ -38,7 +39,6 @@ export class MenuItemComponent implements OnInit, OnDestroy {
 
   private _destroy$ = new Subject();
   constructor(
-    private _classnameSer: ClassnameService,
     private _menuSer: MenuService,
     @Optional() private _submenuSer: SubmenuService,
     @Inject(MENU_CONFIG) private _menu: MenuConfig // private _renderer: Renderer2
@@ -51,9 +51,6 @@ export class MenuItemComponent implements OnInit, OnDestroy {
       return;
     }
     this._menuSer.handleMenuItemClick(this);
-    // if (this.nzSubmenuService) {
-    //   this.nzSubmenuService.handleMenuItemClick();
-    // }
   }
 
   setSelectedState(v: boolean) {
@@ -72,7 +69,8 @@ export class MenuItemComponent implements OnInit, OnDestroy {
     this.classMap = {
       [`${prefix}-item`]: true,
       [`${prefix}-selected`]: this.selected,
-      [`${prefix}-disabled`]: this.disabled
+      [`${prefix}-disabled`]: this.disabled,
+      ['primaryColor']: this.selected
     };
   }
 

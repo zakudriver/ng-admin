@@ -1,4 +1,4 @@
-import { Component, forwardRef, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LayoutService } from '@app/layout/layout.service';
 
 @Component({

@@ -55,7 +55,7 @@ export class SubmenuComponent implements OnInit, OnDestroy {
     private _submenuSer: SubmenuService,
     private _classnameSer: ClassnameService,
     private _cdr: ChangeDetectorRef,
-    @Inject(MENU_CONFIG) private _menu: MenuConfig // private _renderer: Renderer2
+    @Inject(MENU_CONFIG) private _menu: MenuConfig
   ) {}
 
   private _setOpenState(open: boolean): void {
@@ -76,7 +76,7 @@ export class SubmenuComponent implements OnInit, OnDestroy {
   }
 
   private _setClassName(): void {
-    const prefix = this._menu.submenuPrefix;
+    const prefix = this._menu.menuPrefix;
 
     // this._classnameSer.updateClassName(this.subMenuEle.nativeElement, {
     //   [`${prefix}-submenu`]: true,

@@ -9,7 +9,8 @@ import {
   MatMenuModule,
   MatSidenavModule,
   MatToolbarModule,
-  MatRippleModule
+  MatRippleModule,
+  MatRadioModule
 } from '@angular/material';
 import { DEFAULT_GLOBAL_OPTIONS } from './global.config';
 
@@ -25,7 +26,8 @@ import { DEFAULT_GLOBAL_OPTIONS } from './global.config';
     MatMenuModule,
     MatSidenavModule,
     MatToolbarModule,
-    MatRippleModule
+    MatRippleModule,
+    MatRadioModule
   ],
   exports: [
     MatButtonModule,
@@ -37,7 +39,8 @@ import { DEFAULT_GLOBAL_OPTIONS } from './global.config';
     MatMenuModule,
     MatSidenavModule,
     MatToolbarModule,
-    MatRippleModule
+    MatRippleModule,
+    MatRadioModule
   ],
   providers: [...DEFAULT_GLOBAL_OPTIONS]
 })
