@@ -4,47 +4,41 @@ export const MENU_CONFIG = new InjectionToken<IMenu[]>('menu.config');
 
 export const menuConfig: IMenu[] = [
   {
+    key: '0',
+    name: 'Edidor',
+    icon: 'edit',
+    path: '/editor'
+  },
+  {
     key: '1',
     name: 'Article',
-    icon: 'menu'
-  },
-  {
-    key: '11',
-    parentKey: '1',
-    name: 'Article',
-    path: '/article',
-    icon: 'menu'
-  },
-  {
-    key: '12',
-    parentKey: '1',
-    name: 'Setting',
-    path: '/setting',
-    icon: ''
+    icon: 'library_books',
+    path: '/article'
   },
   {
     key: '2',
-    name: 'Article',
-    icon: ''
-  },
-  {
-    key: '21',
-    parentKey: '2',
-    name: 'Article',
-    path: '/article',
-    icon: ''
-  },
-  {
-    key: '22',
-    parentKey: '2',
-    name: 'Setting',
-    path: '/setting',
-    icon: ''
+    name: 'Message',
+    icon: 'message',
+    path: '/message'
   },
   {
     key: '3',
-    name: 'Article',
-    icon: ''
+    name: 'Setting',
+    icon: 'settings'
+  },
+  {
+    key: '30',
+    parentKey: '3',
+    name: 'Front',
+    icon: 'web',
+    path: '/setting/front'
+  },
+  {
+    key: '31',
+    parentKey: '3',
+    name: 'Admin',
+    icon: 'apps',
+    path: '/setting/admin'
   }
 ];
 

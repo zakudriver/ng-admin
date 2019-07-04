@@ -6,4 +6,6 @@ import { MediaMatcher } from '@angular/cdk/layout';
   templateUrl: './article.component.html',
   styleUrls: ['./article.component.styl']
 })
-export class ArticleComponent {}
+export class ArticleComponent {
+  constructor() {}
+}

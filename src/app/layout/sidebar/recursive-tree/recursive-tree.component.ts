@@ -12,7 +12,7 @@ import { IMenuTree } from '@app/config/menu.config';
       </li>
 
       <ng-template #MenuItem>
-        <li z-menu-item [icon]="i.icon">{{ i.name }}</li>
+        <li z-menu-item [icon]="i.icon" [routerLink]="[i.path]">{{ i.name }}</li>
       </ng-template>
     </ng-container>
   `,

@@ -16,7 +16,8 @@ import { MenuService } from '../menu.service';
 import { InputBoolean } from '@app/core/utils/convert';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
 import { SubmenuService } from '../submenu/submenu.service';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
+import { NavigationEnd, ActivationEnd } from '@angular/router';
 
 @Component({
   selector: '[z-menu-item]',
@@ -33,7 +34,8 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./menu-item.component.styl'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '(click)': 'clickMenuItem($event)'
+    '(click)': 'clickMenuItem($event)',
+    class: 'outline'
   }
 })
 export class MenuItemComponent implements OnInit, OnDestroy {
@@ -46,6 +48,9 @@ export class MenuItemComponent implements OnInit, OnDestroy {
   disabled: boolean = false;
 
   @Input() icon: string = '';
+
+  @Input()
+  routerLink: string[] = [];
 
   @ViewChild('MenuItem', { read: ElementRef, static: false })
   menuItemEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;

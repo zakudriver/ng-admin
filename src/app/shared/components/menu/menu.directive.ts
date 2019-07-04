@@ -33,6 +33,12 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
   @Input()
   indent: number = 40;
 
+  @Input()
+  defaultOpenKey: string[] = [];
+
+  @Input()
+  selectedKey: string = '';
+
   private _destroy$ = new Subject();
   constructor(
     private _eleRef: ElementRef,
@@ -49,12 +55,6 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.indent) {
-      this._menuSer.setIndent(this.indent);
-    }
-  }
-
   ngOnInit(): void {
     this._setClassName();
     const { menuItems, handleMenuItemClick$ } = this._menuSer;
@@ -69,6 +69,14 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.indent) {
+      this._menuSer.setIndent(this.indent);
+    }
+
+    if (changes.defaultOpenKey) {
+    }
+  }
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
