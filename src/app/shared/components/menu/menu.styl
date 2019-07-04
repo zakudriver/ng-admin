@@ -11,6 +11,15 @@ menuPrefix = $prefix + '-menu'
   &-item, &-sub
     padding 6px 8px
     cursor pointer
+    display flex
+    align-items center
+
+    mat-icon
+      $iconWidth = 16px
+      margin-right 10px
+      font-size $iconWidth
+      width $iconWidth
+      height $iconWidth
 
     &:hover
       background-color rgba(0, 0, 0, 0.08)

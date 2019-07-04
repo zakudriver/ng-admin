@@ -7,7 +7,7 @@ export const menuConfig = {
 };
 export type MenuConfig = typeof menuConfig;
 
-export const MENU_CONFIG_PROVIDE = {
+export const MENU_COMPONENT_CONFIG_PROVIDER = {
   provide: MENU_CONFIG,
   useValue: menuConfig
 };

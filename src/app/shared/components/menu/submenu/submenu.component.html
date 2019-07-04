@@ -7,7 +7,9 @@
   (mouseleave)="setMouseEnterState(false)"
   matRipple
 >
-  <!-- <i nz-icon [nzType]="nzIcon" *ngIf="nzIcon"></i> -->
+  <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+  <ng-content select="[icon]" *ngIf="!icon"></ng-content>
+
   <ng-container *zStringTemplateOutlet="title"
     ><span class="zyhh-menu-label">{{ title }}</span></ng-container
   >

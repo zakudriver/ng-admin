@@ -25,7 +25,7 @@ import { collapseMotion } from '@app/core/animations/menu.motion';
   selector: '[z-submenu]',
   templateUrl: './submenu.component.html',
   styleUrls: ['./submenu.component.styl'],
-  providers: [ClassnameService, SubmenuService],
+  providers: [SubmenuService],
   animations: [collapseMotion],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -38,6 +38,7 @@ export class SubmenuComponent implements OnInit, OnDestroy {
 
   @Input() title: string | TemplateRef<void> = '';
   @Input() subIndent: number = 16;
+  @Input() icon: string = '';
 
   @ViewChild('SubMenu', { read: ElementRef, static: false })
   subMenuEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
@@ -53,7 +54,6 @@ export class SubmenuComponent implements OnInit, OnDestroy {
   constructor(
     private _menuSer: MenuService,
     private _submenuSer: SubmenuService,
-    private _classnameSer: ClassnameService,
     private _cdr: ChangeDetectorRef,
     @Inject(MENU_CONFIG) private _menu: MenuConfig
   ) {}

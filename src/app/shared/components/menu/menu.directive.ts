@@ -25,7 +25,7 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
 })
 export class MenuDirective implements OnChanges, OnInit, OnDestroy {
   @Output()
-  readonly zClick = new EventEmitter<any>();
+  readonly change = new EventEmitter<any>();
   @ContentChildren(MenuItemComponent, { descendants: true }) menuItemList: QueryList<
     MenuItemComponent
   > = {} as QueryList<MenuItemComponent>;
@@ -57,10 +57,15 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._setClassName();
+    const { menuItems, handleMenuItemClick$ } = this._menuSer;
 
-    this._menuSer.handleMenuItemClick$.pipe(takeUntil(this._destroy$)).subscribe(v => {
-      this.zClick.emit(v);
-      this.menuItemList.forEach(i => i.setSelectedState(i === v));
+    const list = this.menuItemList.length ? this.menuItemList : menuItems;
+
+    handleMenuItemClick$.pipe(takeUntil(this._destroy$)).subscribe(v => {
+      this.change.emit(v);
+      list.forEach(i => {
+        i.setSelectedState(i === v);
+      });
     });
   }
 

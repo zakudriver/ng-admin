@@ -8,13 +8,18 @@ export class MenuService {
   menuOpen$ = new BehaviorSubject<boolean>(false);
   indent$ = new BehaviorSubject<number>(40);
 
+  menuItems: MenuItemComponent[] = [];
   constructor() {}
 
-  handleMenuItemClick(menu: MenuItemComponent) {
-    this.handleMenuItemClick$.next(menu);
+  handleMenuItemClick(v: MenuItemComponent) {
+    this.handleMenuItemClick$.next(v);
   }
 
   setIndent(v: number): void {
     this.indent$.next(v);
+  }
+
+  addMenuItem(v: MenuItemComponent) {
+    this.menuItems.push(v);
   }
 }

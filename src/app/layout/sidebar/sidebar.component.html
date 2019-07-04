@@ -1,28 +1,25 @@
 <div class="sidebar">
-  <ul z-menu (zClick)="changeMenu($event)">
-    <li z-submenu>
-      <span title>test title</span>
-      <ul>
-        <li z-menu-item>
-          subtest
-        </li>
-        <li z-menu-item>
-          subtest
-        </li>
-        <li z-submenu>
-          <span title>testt title</span>
+  <!-- <ul z-menu (change)="changeMenu($event)">
+    <ng-template #MenuList let-list="k">
+      <ng-container *ngFor="let i of list">
+        <li z-submenu *ngIf="i.children; else MenuItem">
+          <span title>{{ i.name }}</span>
+
           <ul>
-            <li z-menu-item>
-              subtestt
-            </li>
-            <li z-menu-item>
-              subtestt
-            </li>
+            <ng-container *ngTemplateOutlet="MenuList; context: { k: i.children }"></ng-container>
           </ul>
         </li>
-      </ul>
-    </li>
-    <li z-menu-item>test</li>
-    <li z-menu-item>test</li>
+
+        <ng-template #MenuItem>
+          <li z-menu-item>{{ i.name }}</li>
+        </ng-template>
+      </ng-container>
+    </ng-template>
+
+    <ng-container *ngTemplateOutlet="MenuList; context: { k: tree }"></ng-container>
+  </ul> -->
+
+  <ul z-menu>
+    <z-recursive-tree [data]="tree"></z-recursive-tree>
   </ul>
 </div>

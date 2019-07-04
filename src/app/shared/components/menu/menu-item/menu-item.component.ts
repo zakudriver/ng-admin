@@ -1,6 +1,17 @@
-import { Component, ElementRef, OnInit, Input, Inject, OnDestroy, Optional, Renderer2, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  Input,
+  Inject,
+  OnDestroy,
+  Optional,
+  ViewChild,
+  ChangeDetectionStrategy,
+  SimpleChanges,
+  ChangeDetectorRef
+} from '@angular/core';
 import { Subject, merge, EMPTY } from 'rxjs';
-import { ClassnameService } from '@app/core/services/classname.service';
 import { MenuService } from '../menu.service';
 import { InputBoolean } from '@app/core/utils/convert';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
@@ -11,12 +22,16 @@ import { takeUntil } from 'rxjs/operators';
   selector: '[z-menu-item]',
   template: `
     <div #MenuItem matRipple [style.paddingLeft.px]="paddingLeft" [ngClass]="classMap">
+      <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+      <ng-content select="[icon]" *ngIf="!icon"></ng-content>
+
       <span class="zyhh-menu-label">
         <ng-content></ng-content>
       </span>
     </div>
   `,
   styleUrls: ['./menu-item.component.styl'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(click)': 'clickMenuItem($event)'
   }
@@ -30,6 +45,8 @@ export class MenuItemComponent implements OnInit, OnDestroy {
   @InputBoolean()
   disabled: boolean = false;
 
+  @Input() icon: string = '';
+
   @ViewChild('MenuItem', { read: ElementRef, static: false })
   menuItemEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
   selected$ = new Subject<boolean>();
@@ -41,8 +58,11 @@ export class MenuItemComponent implements OnInit, OnDestroy {
   constructor(
     private _menuSer: MenuService,
     @Optional() private _submenuSer: SubmenuService,
+    private _cdr: ChangeDetectorRef,
     @Inject(MENU_CONFIG) private _menu: MenuConfig // private _renderer: Renderer2
-  ) {}
+  ) {
+    _menuSer.addMenuItem(this);
+  }
 
   clickMenuItem(e: MouseEvent) {
     e.stopPropagation();
@@ -57,6 +77,7 @@ export class MenuItemComponent implements OnInit, OnDestroy {
     this.selected = v;
     this.selected$.next(v);
     this._setClassName();
+    this._cdr.markForCheck();
   }
 
   private _setClassName() {
@@ -76,12 +97,7 @@ export class MenuItemComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._setClassName();
-
     const { indent$ } = this._menuSer;
-
-    // if (this._eleRef.nativeElement.style['padding-left']) {
-    //   this._originalPadding = parseInt(this._eleRef.nativeElement.style['padding-left'], 10);
-    // }
 
     merge(indent$, this._submenuSer ? this._submenuSer.level$ : EMPTY)
       .pipe(takeUntil(this._destroy$))
@@ -89,13 +105,17 @@ export class MenuItemComponent implements OnInit, OnDestroy {
         const level = this._submenuSer ? this._submenuSer.level$.value : 0;
         const padding = (level ? this._submenuSer.subIndent$.value * level : 0) + indent$.value;
 
-        // if (padding) {
-        //   this._renderer.setStyle(this._eleRef.nativeElement, 'padding-left', `${padding}px`);
-        // } else {
-        //   this._renderer.removeStyle(this._eleRef.nativeElement, 'padding-left');
-        // }
         this.paddingLeft = padding;
       });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.nzSelected) {
+      this.setSelectedState(this.disabled);
+    }
+    if (changes.disabled) {
+      this._setClassName();
+    }
   }
 
   ngOnDestroy(): void {
