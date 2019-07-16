@@ -54,7 +54,7 @@ export class SignComponent implements OnInit {
 
   submitSignUp() {
     const codeId = this._cacheSer.getSession('codeId');
-    const params = Object.assign(codeId, this.signUpForm.value);
+    const params = Object.assign({codeId}, this.signUpForm.value);
 
     this._http.post('sendCode', '/user/signup', params).subscribe(v => {
       this._snackBar.open(v.msg);
