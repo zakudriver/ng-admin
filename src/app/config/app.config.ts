@@ -4,7 +4,7 @@ import { environment } from '@src/environments/environment';
 export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
 
 export const appConfig = {
-  api: 'http://127.0.0.1:8999',
+  api: 'http://127.0.0.1:4001',
   // api: 'http://api.zyhua.cn',
   router: [
     {

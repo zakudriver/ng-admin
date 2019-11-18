@@ -7,17 +7,16 @@ import {
   HttpHeaderResponse,
   HttpProgressEvent,
   HttpResponse,
-  HttpUserEvent,
-  HttpErrorResponse, HttpHeaders,
+  HttpErrorResponse,
+  HttpHeaders
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { mergeMap, catchError } from 'rxjs/operators';
 import { APP_CONFIG, AppConfig } from '@app/config/app.config';
 import { TokenField } from '@app/constants';
 
-
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class NetService implements HttpInterceptor {
   private _api: string;
@@ -32,14 +31,7 @@ export class NetService implements HttpInterceptor {
     });
   }
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler,
-  ): Observable<| HttpSentEvent
-    | HttpHeaderResponse
-    | HttpProgressEvent
-    | HttpResponse<any>
-    | HttpUserEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
     let url = req.url;
     if (!url.startsWith('https://') && !url.startsWith('http://')) {
       url = this._api + url;
@@ -57,7 +49,7 @@ export class NetService implements HttpInterceptor {
 
         return of(event);
       }),
-      catchError((err: HttpErrorResponse) => of(err)),
+      catchError((err: HttpErrorResponse) => of(err))
     );
   }
 }

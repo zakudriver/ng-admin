@@ -47,14 +47,14 @@ export class SignComponent implements OnInit {
     this._http.post<{ codeId: string }>('sendCode', '/user/code', this.signUpForm.value).subscribe(v => {
       if (v.code === 0) {
         this._snackBar.open(v.msg);
-        this._cacheSer.setSession('codeId', v.data.codeId);
+        this._cacheSer.setSession('codeID', v.data.codeId);
       }
     });
   }
 
   submitSignUp() {
-    const codeId = this._cacheSer.getSession('codeId');
-    const params = Object.assign({codeId}, this.signUpForm.value);
+    const codeId = this._cacheSer.getSession('codeID');
+    const params = Object.assign({ codeId }, this.signUpForm.value);
 
     this._http.post('sendCode', '/user/signup', params).subscribe(v => {
       this._snackBar.open(v.msg);
@@ -85,7 +85,7 @@ export class SignComponent implements OnInit {
     return '';
   }
 
-  private formStatusChanges() {
+  private _formStatusChanges() {
     this.signUpForm.statusChanges.subscribe(v => {
       const usernameStatus = this.signUpForm.get('username');
       const passwordStatus = this.signUpForm.get('password');
@@ -100,6 +100,6 @@ export class SignComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.formStatusChanges();
+    this._formStatusChanges();
   }
 }
