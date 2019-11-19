@@ -38,8 +38,8 @@ export class NetService implements HttpInterceptor {
     }
 
     const newReq = req.clone({
-      url,
-      headers: this._headers()
+      url
+      // headers: this._headers()
     });
     return next.handle(newReq).pipe(
       mergeMap((event: any) => {
@@ -48,8 +48,8 @@ export class NetService implements HttpInterceptor {
         }
 
         return of(event);
-      }),
-      catchError((err: HttpErrorResponse) => of(err))
+      })
+      // catchError((err: HttpErrorResponse) => of(err))
     );
   }
 }

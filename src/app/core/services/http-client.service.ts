@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { LoggerService } from './logger.service';
 import { map, tap, catchError, filter } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
@@ -65,28 +65,20 @@ export class HttpClientService {
     def?: T
   ): Observable<IResponse<T>> {
     return this._http.request<IResponse<T>>(method, url, option).pipe(
-      tap(v => {
-        if (v.code !== 0) {
-          throw v.msg;
-        }
-        this._loggerSer.responseLog(v, func);
+      tap(r => {
+        this._loggerSer.responseLog(r, func);
       }),
-      // map(v => v.data),
-      catchError((msg: string) => {
-        this._snackBar.open(msg);
-        this._loggerSer.error(msg);
-        if (def) {
-          return of({
-            code: 1,
-            msg,
-            data: def
-          });
-        }
+      // map(r => {
+      //   return r;
+      // }),
+      catchError((msg: HttpErrorResponse) => {
+        this._snackBar.open(msg.error.msg);
+        this._loggerSer.error(msg.error);
         return of({
-          code: 1,
-          msg,
-          data: null
-        } as IResponse<any>);
+          msg: msg.error.msg,
+          data: def || null,
+          error: msg.error.msg
+        } as IResponse);
       })
     );
   }
