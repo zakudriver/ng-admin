@@ -54,7 +54,7 @@ export class SignComponent implements OnInit {
     const codeId = this._cacheSer.getSession('codeID');
     const params = Object.assign({ codeId }, this.signUpForm.value);
 
-    this._http.post('sendCode', '/usersvc/signup', params).subscribe(v => {
+    this._http.post('submitSignUp', '/usersvc/signup', params).subscribe(v => {
       this._snackBar.open(v.msg);
       this.isActive = false;
     });
@@ -62,7 +62,7 @@ export class SignComponent implements OnInit {
 
   submitSignIn() {
     const params = this.signInForm.value;
-    this._http.post('sendCode', '/usersvc/login', params).subscribe(r => {
+    this._http.post('submitSignIn', '/usersvc/login', params).subscribe(r => {
       if (!r.error) {
         this._router.navigateByUrl('/');
       }
