@@ -51,12 +51,14 @@ export class SignComponent implements OnInit {
   }
 
   submitSignUp() {
-    const codeId = this._cacheSer.getSession('codeID');
-    const params = Object.assign({ codeId }, this.signUpForm.value);
+    const codeID = this._cacheSer.getSession('codeID');
+    const params = Object.assign({ codeID }, this.signUpForm.value);
 
-    this._http.post('submitSignUp', '/usersvc/signup', params).subscribe(v => {
-      this._snackBar.open(v.msg);
-      this.isActive = false;
+    this._http.post('submitSignUp', '/usersvc/register', params).subscribe(r => {
+      if (!r.error) {
+        this.isActive = false;
+      }
+      this._snackBar.open(r.msg);
     });
   }
 

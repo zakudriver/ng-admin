@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@ang
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { HttpClientService } from '@app/core/services/http-client.service';
 
 export interface PeriodicElement {
   name: string;
@@ -118,7 +119,13 @@ export class ArticleComponent implements OnInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
   expandedElement: PeriodicElement | null = {} as PeriodicElement;
-  constructor() {}
+  constructor(private http: HttpClientService) {}
+
+  ontest() {
+    this.http.get('ontest', '/usersvc/www').subscribe(r => {
+      console.log(r);
+    });
+  }
 
   ngOnInit() {}
 }

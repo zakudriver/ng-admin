@@ -38,7 +38,8 @@ export class NetService implements HttpInterceptor {
     }
 
     const newReq = req.clone({
-      url
+      url,
+      withCredentials: true
       // headers: this._headers()
     });
     return next.handle(newReq).pipe(
