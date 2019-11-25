@@ -6,7 +6,11 @@ import { LayoutComponent } from '@app/layout/layout.component';
 const main: Routes = [
   {
     path: 'article',
-    loadChildren: () => import('@app/routes/article/article.module').then(v => v.ArticleModule)
+    loadChildren: () => import('@app/routes/article/article.module').then(m => m.ArticleModule)
+  },
+  {
+    path: 'editor',
+    loadChildren: () => import('@app/routes/editor/editor.module').then(m => m.EditorModule)
   }
 ];
 
@@ -18,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'sign',
-    loadChildren: () => import('@app/routes/sign/sign.module').then(v => v.SignModule)
+    loadChildren: () => import('@app/routes/sign/sign.module').then(m => m.SignModule)
   },
   {
     path: '**',

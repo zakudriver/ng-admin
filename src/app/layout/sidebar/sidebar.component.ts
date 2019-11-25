@@ -13,14 +13,13 @@ import { IMenu, IMenuTree, MENU_CONFIG } from '@app/config/menu.config';
 export class SidebarComponent implements OnInit {
   tree: IMenuTree[] = [];
   path = '/sign';
-  constructor(public layoutSer: LayoutService, @Inject(MENU_CONFIG) private _menu: IMenu[]) {
-    this.tree = this._handleTree(_menu);
-    console.log(this.tree);
+  constructor(public layoutSer: LayoutService, @Inject(MENU_CONFIG) private menu: IMenu[]) {
+    this.tree = this.handleTree(menu);
   }
 
   changeMenu(v: MenuItemComponent) {}
 
-  private _handleTree(menu: IMenu[], len: number = 1, r: IMenuTree[] = []) {
+  private handleTree(menu: IMenu[], len: number = 1, r: IMenuTree[] = []) {
     const children: IMenu[] = [];
     const o: IMenu[] = [];
 
@@ -37,20 +36,20 @@ export class SidebarComponent implements OnInit {
     });
 
     r.forEach(i => {
-      this._handleChildTree(i, children);
+      this.handleChildTree(i, children);
     });
 
     if (o.length > 0) {
-      this._handleTree(o, len + 1, r);
+      this.handleTree(o, len + 1, r);
     }
 
     return r;
   }
 
-  private _handleChildTree(node: IMenuTree, children: IMenu[]) {
+  private handleChildTree(node: IMenuTree, children: IMenu[]) {
     if (node.children) {
       node.children.forEach(i => {
-        this._handleChildTree(i, children);
+        this.handleChildTree(i, children);
       });
     } else {
       children.forEach(i => {

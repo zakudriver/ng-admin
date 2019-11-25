@@ -17,7 +17,6 @@ import { InputBoolean } from '@app/core/utils/convert';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
 import { SubmenuService } from '../submenu/submenu.service';
 import { takeUntil, filter } from 'rxjs/operators';
-import { NavigationEnd, ActivationEnd } from '@angular/router';
 
 @Component({
   selector: '[z-menu-item]',
@@ -26,7 +25,7 @@ import { NavigationEnd, ActivationEnd } from '@angular/router';
       <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
       <ng-content select="[icon]" *ngIf="!icon"></ng-content>
 
-      <span class="zyhh-menu-label">
+      <span class="z-menu-label">
         <ng-content></ng-content>
       </span>
     </div>

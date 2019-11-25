@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      .cursor_module {
+        position: relative;
+        /* line-height: 22px;
+        font-size: 14px; */
+      }
+
+      .cursor_content {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: auto;
+        max-width: 90%;
+        word-wrap: break-word;
+        overflow: hidden;
+        display: inline-block;
+        white-space: pre;
+      }
+      .cursor {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 6px;
+        height: 16px;
+        display: inline-block;
+        background: green;
+        z-index: 1000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cursor_module">
+      <p class="cursor_content"></p>
+      <span class="cursor"></span>
+    </div>
+    <form id="chatting_form" class="clearfix" enctype="application/x-www-form-urlencoded">
+      <label for="chatting_msg"></label><input type="text" id="chatting_msg" autofocus name="chatting_msg" />
+    </form>
+  </body>
+
+  <script>
+    var Cursor = (function() {
+      // var chatting_msg = JM.getEles("[name='chatting_msg']")[0];
+      var chatting_msg = document.getElementById('chatting_msg');
+      var cursor_module = document.getElementsByClassName('cursor_module')[0];
+      // var chatting_footer = JM.getEles('.chatting_footer')[0];
+
+      //create elements
+      // var cP = document.createElement('p');
+      // var cSpan = document.createElement('span');
+      // JM.addClass(cP, 'cursor_content');
+      // JM.addClass(cSpan, 'cursor');
+      // JM.addNodes(cursor_module, cSpan);
+      // JM.addNodes(cursor_module, cP);
+
+      //keydown
+      chatting_msg.addEventListener('keydown', function(event) {
+        // var ev = JM.getEvent(event),
+        //   cCode = JM.getCharCode(ev);
+        var cCode = event.keyCode;
+
+        var aP = document.getElementsByClassName('cursor_content')[0],
+          aSpan = document.getElementsByClassName('cursor')[0];
+
+        // var aP_width = parseInt(JM.getStyle(aP, 'width')); //get aP real width
+        var aP_width = parseInt(aP.style.width || 0); //get aP real width
+
+        // var aSpan_l = parseInt(JM.getStyle(aSpan, 'left')), //get span left
+        //   aSpan_w = parseInt(JM.getStyle(aSpan, 'width')); //get span width
+        var aSpan_l = parseInt(aSpan.style.left || 0), //get span left
+          aSpan_w = parseInt(aSpan.style.width || 0); //get span width
+
+        var val = chatting_msg.value;
+        //left arrow
+        //没有value值，按左箭头不动
+        //有value值，按右箭头，光标向左移，但移到前面一个字符的后面就不可以再移动
+        if (cCode === 37 && chatting_msg.value != '') {
+          if (aSpan_l > 0) {
+            aSpan.style.left = aSpan_l - aSpan_w + 'px';
+          }
+        }
+        //right arrow
+        //没有value值，按右箭头不动
+        //有value值，按右箭头，光标向右移，但移到最后一个字符的后面就不可以再移动
+        else if (cCode === 39 && chatting_msg.value != '') {
+          aSpan.style.left = aSpan_l + aSpan_w + 'px';
+          if (aSpan_l === aP_width) {
+            aSpan.style.left = aP_width + 'px';
+          }
+        }
+        //backspace
+        else if (cCode === 8) {
+          if (chatting_msg.value != '') {
+            aP.innerHTML = chatting_msg.value;
+            if (aSpan_l != 0) {
+              aSpan.style.left = aSpan_l - aSpan_w + 'px';
+            }
+          } else {
+            aSpan.style.left = 0;
+          }
+          //if enter backspace,remove move event
+          // JM.removeHandler(chatting_msg, 'input', move, false);
+          chatting_msg.removeEventListener('input', move, false);
+        } else {
+          //show value by keyup not keydown,because keydown will slow step;
+          // JM.addHandler(
+          //   chatting_msg,
+          //   'keyup',
+          //   function() {
+          //     aP.innerHTML = chatting_msg.value;
+          //   },
+          //   false
+          // );
+          chatting_msg.addEventListener(
+            'keyup',
+            function() {
+              aP.innerHTML = chatting_msg.value;
+            },
+            false
+          );
+          // JM.addHandler(chatting_msg, 'input', move, false);
+          chatting_msg.addEventListener('input', move, false);
+        }
+      });
+
+      // JM.addHandler(
+      //   chatting_msg,
+      //   'keydown',
+      //   function(event) {
+      //     var ev = JM.getEvent(event),
+      //       cCode = JM.getCharCode(ev);
+
+      //     var aP = JM.getEles('.cursor_content')[0],
+      //       aSpan = JM.getEles('.cursor')[0];
+
+      //     var aP_width = parseInt(JM.getStyle(aP, 'width')); //get aP real width
+
+      //     var aSpan_l = parseInt(JM.getStyle(aSpan, 'left')), //get span left
+      //       aSpan_w = parseInt(JM.getStyle(aSpan, 'width')); //get span width
+
+      //     var val = chatting_msg.value;
+      //     //left arrow
+      //     //没有value值，按左箭头不动
+      //     //有value值，按右箭头，光标向左移，但移到前面一个字符的后面就不可以再移动
+      //     if (cCode === 37 && chatting_msg.value != '') {
+      //       if (aSpan_l > 0) {
+      //         aSpan.style.left = aSpan_l - aSpan_w + 'px';
+      //       }
+      //     }
+      //     //right arrow
+      //     //没有value值，按右箭头不动
+      //     //有value值，按右箭头，光标向右移，但移到最后一个字符的后面就不可以再移动
+      //     else if (cCode === 39 && chatting_msg.value != '') {
+      //       aSpan.style.left = aSpan_l + aSpan_w + 'px';
+      //       if (aSpan_l === aP_width) {
+      //         aSpan.style.left = aP_width + 'px';
+      //       }
+      //     }
+      //     //backspace
+      //     else if (cCode === 8) {
+      //       if (chatting_msg.value != '') {
+      //         aP.innerHTML = chatting_msg.value;
+      //         if (aSpan_l != 0) {
+      //           aSpan.style.left = aSpan_l - aSpan_w + 'px';
+      //         }
+      //       } else {
+      //         aSpan.style.left = 0;
+      //       }
+      //       //if enter backspace,remove move event
+      //       JM.removeHandler(chatting_msg, 'input', move, false);
+      //     } else {
+      //       //show value by keyup not keydown,because keydown will slow step;
+      //       JM.addHandler(
+      //         chatting_msg,
+      //         'keyup',
+      //         function() {
+      //           aP.innerHTML = chatting_msg.value;
+      //         },
+      //         false
+      //       );
+      //       JM.addHandler(chatting_msg, 'input', move, false);
+      //     }
+      //   },
+      //   false
+      // );
+
+      //move cursor in the text
+      var move = function() {
+        var aSpan = document.getElementsByClassName('cursor')[0],
+          aSpan_l = parseInt(aSpan.style.left),
+          aSpan_w = parseInt(aSpan.style.width);
+        aSpan.style.left = aSpan_l + aSpan_w + 'px';
+      };
+    })();
+  </script>
+</html>

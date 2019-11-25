@@ -31,37 +31,37 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
   > = {} as QueryList<MenuItemComponent>;
 
   @Input()
-  indent: number = 40;
+  indent = 40;
 
   @Input()
   defaultOpenKey: string[] = [];
 
   @Input()
-  selectedKey: string = '';
+  selectedKey = '';
 
-  private _destroy$ = new Subject();
+  private destroy$ = new Subject();
   constructor(
-    private _eleRef: ElementRef,
-    private _classnameSer: ClassnameService,
-    private _menuSer: MenuService,
-    @Inject(MENU_CONFIG) private _menu: MenuConfig
+    private eleRef: ElementRef,
+    private classnameSer: ClassnameService,
+    private menuSer: MenuService,
+    @Inject(MENU_CONFIG) private menu: MenuConfig
   ) {}
 
-  private _setClassName() {
-    const prefix = this._menu.menuPrefix;
-    this._classnameSer.updateClassName(this._eleRef.nativeElement, {
+  private setClassName() {
+    const prefix = this.menu.menuPrefix;
+    this.classnameSer.updateClassName(this.eleRef.nativeElement, {
       [`${prefix}`]: true,
       [`${prefix}-root`]: true
     });
   }
 
   ngOnInit(): void {
-    this._setClassName();
-    const { menuItems, handleMenuItemClick$ } = this._menuSer;
+    this.setClassName();
+    const { menuItems, handleMenuItemClick$ } = this.menuSer;
 
     const list = this.menuItemList.length ? this.menuItemList : menuItems;
 
-    handleMenuItemClick$.pipe(takeUntil(this._destroy$)).subscribe(v => {
+    handleMenuItemClick$.pipe(takeUntil(this.destroy$)).subscribe(v => {
       this.change.emit(v);
       list.forEach(i => {
         i.setSelectedState(i === v);
@@ -71,14 +71,14 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.indent) {
-      this._menuSer.setIndent(this.indent);
+      this.menuSer.setIndent(this.indent);
     }
 
     if (changes.defaultOpenKey) {
     }
   }
   ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

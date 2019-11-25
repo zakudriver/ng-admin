@@ -5,15 +5,15 @@ export const MENU_CONFIG = new InjectionToken<IMenu[]>('menu.config');
 export const menuConfig: IMenu[] = [
   {
     key: '0',
-    name: 'Edidor',
-    icon: 'edit',
-    path: '/editor'
-  },
-  {
-    key: '1',
     name: 'Article',
     icon: 'library_books',
     path: '/article'
+  },
+  {
+    key: '1',
+    name: 'Edidor',
+    icon: 'edit',
+    path: '/editor'
   },
   {
     key: '2',
