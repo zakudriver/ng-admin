@@ -17,6 +17,7 @@ import { InputBoolean } from '@app/core/utils/convert';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
 import { SubmenuService } from '../submenu/submenu.service';
 import { takeUntil, filter } from 'rxjs/operators';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: '[z-menu-item]',
@@ -53,8 +54,10 @@ export class MenuItemComponent implements OnInit, OnDestroy {
 
   @ViewChild('MenuItem', { read: ElementRef, static: false })
   menuItemEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
-  selected$ = new Subject<boolean>();
+  // selected$ = new Subject<boolean>();
   paddingLeft = 0;
+
+  private _router$ = this._router.events.pipe(filter(i => i instanceof NavigationEnd));
 
   classMap = {};
 
@@ -63,9 +66,11 @@ export class MenuItemComponent implements OnInit, OnDestroy {
     private _menuSer: MenuService,
     @Optional() private _submenuSer: SubmenuService,
     private _cdr: ChangeDetectorRef,
-    @Inject(MENU_CONFIG) private _menu: MenuConfig // private _renderer: Renderer2
+    @Inject(MENU_CONFIG) private _menu: MenuConfig,
+    private _router: Router
   ) {
     _menuSer.addMenuItem(this);
+    this._handleRouter();
   }
 
   clickMenuItem(e: MouseEvent) {
@@ -79,24 +84,25 @@ export class MenuItemComponent implements OnInit, OnDestroy {
 
   setSelectedState(v: boolean) {
     this.selected = v;
-    this.selected$.next(v);
     this._setClassName();
     this._cdr.markForCheck();
   }
 
   private _setClassName() {
     const prefix = this._menu.menuPrefix;
-    // this._classnameSer.updateClassName(this.menuItemEle.nativeElement, {
-    //   [`${prefix}-item`]: true,
-    //   [`${prefix}-selected`]: this.selected,
-    //   [`${prefix}-disabled`]: this.disabled
-    // });
     this.classMap = {
       [`${prefix}-item`]: true,
       [`${prefix}-selected`]: this.selected,
       [`${prefix}-disabled`]: this.disabled,
       ['primaryColor']: this.selected
     };
+  }
+
+  private _handleRouter() {
+    // const { router$ } = this._menuSer;
+    this._router$.pipe(takeUntil(this._destroy$)).subscribe(v => {
+      console.log(v);
+    });
   }
 
   ngOnInit(): void {
@@ -114,9 +120,6 @@ export class MenuItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.nzSelected) {
-      this.setSelectedState(this.disabled);
-    }
     if (changes.disabled) {
       this._setClassName();
     }

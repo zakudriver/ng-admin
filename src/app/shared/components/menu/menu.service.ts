@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { MenuItemComponent } from './menu-item/menu-item.component';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { filter, switchMap, mergeMap, pairwise } from 'rxjs/operators';
 
 @Injectable()
 export class MenuService {
@@ -11,8 +11,16 @@ export class MenuService {
   indent$ = new BehaviorSubject<number>(40);
 
   menuItems: MenuItemComponent[] = [];
-  router$ = this._router.events;
-  constructor(private _router: Router) {}
+  router$ = this._router.events.pipe(filter(i => i instanceof NavigationEnd));
+  // router$ = new BehaviorSubject(this._router.events.pipe(filter(i => i instanceof NavigationEnd))).pipe(
+  //   mergeMap(i => i)
+  // );
+
+  constructor(private _router: Router) {
+    // this.router$.subscribe(r => {
+    //   console.log(r);
+    // });
+  }
 
   handleMenuItemClick(v: MenuItemComponent) {
     this.handleMenuItemClick$.next(v);
