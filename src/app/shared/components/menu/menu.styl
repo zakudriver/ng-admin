@@ -30,8 +30,12 @@ menuPrefix = $prefix + '-menu'
   &-label
     line-height 1.75
 
-  &-submenu > ul
-    padding 8px 0
+  &-submenu 
+    & > ul
+      padding 8px 0
+    &-selected
+        font-weight 500
+        background-color rgba(0, 0, 0, 0.03)
 
   &-selected
     font-weight 500

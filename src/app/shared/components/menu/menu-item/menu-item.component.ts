@@ -6,32 +6,41 @@ import {
   Inject,
   OnDestroy,
   Optional,
-  ViewChild,
   ChangeDetectionStrategy,
   SimpleChanges,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  RendererFactory2,
+  Renderer2
 } from '@angular/core';
 import { Subject, merge, EMPTY } from 'rxjs';
 import { MenuService } from '../menu.service';
 import { InputBoolean } from '@app/core/utils/convert';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
 import { SubmenuService } from '../submenu/submenu.service';
-import { takeUntil, filter } from 'rxjs/operators';
-import { Router, NavigationEnd } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: '[z-menu-item]',
   template: `
-    <div #MenuItem matRipple [style.paddingLeft.px]="paddingLeft" [ngClass]="classMap">
-      <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-      <ng-content select="[icon]" *ngIf="!icon"></ng-content>
+    <ng-container *ngIf="isCollapsed; else CollapsedTemplate">
+      <div matRipple [ngClass]="classMap">
+        <mat-icon style="margin-right:0;" *ngIf="icon">{{ icon }}</mat-icon>
+        <ng-content select="[icon]" *ngIf="!icon"></ng-content>
+      </div>
+    </ng-container>
 
-      <span class="z-menu-label">
-        <ng-content></ng-content>
-      </span>
-    </div>
+    <ng-template #CollapsedTemplate>
+      <div matRipple [style.paddingLeft.px]="paddingLeft" [ngClass]="classMap">
+        <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+        <ng-content select="[icon]" *ngIf="!icon"></ng-content>
+
+        <span class="z-menu-label" *ngIf="!isCollapsed">
+          <ng-content></ng-content>
+        </span>
+      </div>
+    </ng-template>
   `,
-  styleUrls: ['./menu-item.component.styl'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(click)': 'clickMenuItem($event)',
@@ -41,28 +50,30 @@ import { Router, NavigationEnd } from '@angular/router';
 export class MenuItemComponent implements OnInit, OnDestroy {
   @Input()
   @InputBoolean()
-  selected: boolean = false;
+  selected = false;
 
   @Input()
   @InputBoolean()
-  disabled: boolean = false;
+  disabled = false;
 
-  @Input() icon: string = '';
+  @Input() icon = '';
 
   @Input()
   routerLink: string[] = [];
 
-  @ViewChild('MenuItem', { read: ElementRef, static: false })
-  menuItemEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
+  // @ViewChild('MenuItem', { read: ElementRef, static: false })
+  // menuItemEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
   // selected$ = new Subject<boolean>();
   paddingLeft = 0;
-
-  private _router$ = this._router.events.pipe(filter(i => i instanceof NavigationEnd));
+  isCollapsed = false;
 
   classMap = {};
 
+  private _renderer: Renderer2 = this._rendererFactory2.createRenderer(null, null);
   private _destroy$ = new Subject();
   constructor(
+    private _eleRef: ElementRef,
+    private _rendererFactory2: RendererFactory2,
     private _menuSer: MenuService,
     @Optional() private _submenuSer: SubmenuService,
     private _cdr: ChangeDetectorRef,
@@ -70,7 +81,6 @@ export class MenuItemComponent implements OnInit, OnDestroy {
     private _router: Router
   ) {
     _menuSer.addMenuItem(this);
-    this._handleRouter();
   }
 
   clickMenuItem(e: MouseEvent) {
@@ -98,25 +108,36 @@ export class MenuItemComponent implements OnInit, OnDestroy {
     };
   }
 
-  private _handleRouter() {
-    // const { router$ } = this._menuSer;
-    this._router$.pipe(takeUntil(this._destroy$)).subscribe(v => {
-      console.log(v);
-    });
+  private _handleUrlIsSelected(url: string): boolean {
+    if (this.routerLink.length) {
+      return this.routerLink[0].replace(/\?{1}.*$/, '') === url;
+    }
+
+    return false;
   }
 
   ngOnInit(): void {
-    this._setClassName();
-    const { indent$ } = this._menuSer;
+    this._renderer.setStyle(this._eleRef.nativeElement, 'list-style', 'none');
+    const { indent$, collapsed$ } = this._menuSer;
 
-    merge(indent$, this._submenuSer ? this._submenuSer.level$ : EMPTY)
+    merge(indent$, collapsed$, this._submenuSer ? this._submenuSer.level$ : EMPTY)
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
-        const level = this._submenuSer ? this._submenuSer.level$.value : 0;
-        const padding = (level ? this._submenuSer.subIndent$.value * level : 0) + indent$.value;
+        this.isCollapsed = collapsed$.value;
+        if (collapsed$.value) {
+          this.paddingLeft = 0;
+        } else {
+          const level = this._submenuSer ? this._submenuSer.level$.value : 0;
 
-        this.paddingLeft = padding;
+          this.paddingLeft = (level ? this._submenuSer.subIndent$.value * level : 0) + indent$.value;
+        }
       });
+
+    const isSelected = this._handleUrlIsSelected(this._router.url);
+    this.setSelectedState(isSelected);
+    if (this._submenuSer && isSelected) {
+      this._submenuSer.setOpenState(isSelected);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

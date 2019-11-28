@@ -9,11 +9,9 @@ import {
   Inject,
   ChangeDetectorRef,
   SimpleChanges,
-  Renderer2,
   ViewChild
 } from '@angular/core';
 import { SubmenuService } from './submenu.service';
-import { ClassnameService } from '@app/core/services/classname.service';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
@@ -24,7 +22,6 @@ import { collapseMotion } from '@app/core/animations/menu.motion';
 @Component({
   selector: '[z-submenu]',
   templateUrl: './submenu.component.html',
-  styleUrls: ['./submenu.component.styl'],
   providers: [SubmenuService],
   animations: [collapseMotion],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,21 +30,21 @@ import { collapseMotion } from '@app/core/animations/menu.motion';
   }
 })
 export class SubmenuComponent implements OnInit, OnDestroy {
-  @Input() @InputBoolean() disabled: boolean = false;
-  @Input() @InputBoolean() open: boolean = false;
+  @Input() @InputBoolean() disabled = false;
+  // @Input() @InputBoolean() open = false;
 
   @Input() title: string | TemplateRef<void> = '';
-  @Input() subIndent: number = 16;
-  @Input() icon: string = '';
+  @Input() subIndent = 16;
+  @Input() icon = '';
 
   @ViewChild('SubMenu', { read: ElementRef, static: false })
   subMenuEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
 
-  expandState = 'collapsed';
   paddingLeft = 0;
+  expandState = 'collapsed';
+  isCollapsed = false;
   classMap = {};
 
-  private _isChildMenuSelected = false;
   private _isMouseHover = false;
 
   private _destroy$ = new Subject<void>();
@@ -65,7 +62,8 @@ export class SubmenuComponent implements OnInit, OnDestroy {
   clickSubMenuTitle(e: Event): void {
     e.stopPropagation();
     if (!this.disabled) {
-      this._setOpenState(!this.open);
+      const { open$ } = this._submenuSer;
+      this._setOpenState(!open$.value);
     }
   }
 
@@ -77,53 +75,44 @@ export class SubmenuComponent implements OnInit, OnDestroy {
 
   private _setClassName(): void {
     const prefix = this._menu.menuPrefix;
-
-    // this._classnameSer.updateClassName(this.subMenuEle.nativeElement, {
-    //   [`${prefix}-submenu`]: true,
-    //   [`${prefix}-disabled`]: this.disabled,
-    //   [`${prefix}-open`]: this.open,
-    //   [`${prefix}-selected`]: this._isChildMenuSelected,
-    //   [`${prefix}-active`]: this._isMouseHover && !this.disabled
-    // });
+    const { open$ } = this._submenuSer;
 
     this.classMap = {
       [`${prefix}-submenu`]: true,
       [`${prefix}-disabled`]: this.disabled,
-      [`${prefix}-open`]: this.open,
-      [`${prefix}-selected`]: this._isChildMenuSelected,
+      [`${prefix}-open`]: open$.value,
+      [`${prefix}-submenu-selected`]: open$.value,
       [`${prefix}-active`]: this._isMouseHover && !this.disabled
     };
   }
 
   ngOnInit() {
-    const { indent$, menuOpen$ } = this._menuSer;
-    const { open$, subMenuOpen$, level$, subIndent$ } = this._submenuSer;
+    const { indent$, collapsed$ } = this._menuSer;
+    const { open$, level$, subIndent$ } = this._submenuSer;
 
     open$.pipe(takeUntil(this._destroy$)).subscribe(v => {
-      if (v !== this.open) {
-        this.open = v;
-      }
+      // if (v !== open$.value) {
+      //   this.open = v;
+      // }
       this.expandState = v ? 'expanded' : 'collapsed';
       this._setClassName();
     });
 
-    subMenuOpen$.pipe(takeUntil(this._destroy$)).subscribe(v => {
-      menuOpen$.next(v);
-    });
-
-    merge(level$, indent$, open$)
+    merge(level$, indent$, open$, collapsed$)
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
-        this.paddingLeft = indent$.value + subIndent$.value * (level$.value - 1);
+        if (collapsed$.value) {
+          this.paddingLeft = 0;
+        } else {
+          this.paddingLeft = indent$.value + subIndent$.value * (level$.value - 1);
+        }
 
+        this.isCollapsed = collapsed$.value;
         this._cdr.markForCheck();
       });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.open) {
-      this._submenuSer.setOpenState(this.open);
-    }
     if (changes.disabled) {
       this._submenuSer.disabled = this.disabled;
       this._setClassName();

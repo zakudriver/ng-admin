@@ -11,6 +11,10 @@ const main: Routes = [
   {
     path: 'editor',
     loadChildren: () => import('@app/routes/editor/editor.module').then(m => m.EditorModule)
+  },
+  {
+    path: 'setting',
+    loadChildren: () => import('@app/routes/setting/setting.module').then(m => m.SettingModule)
   }
 ];
 

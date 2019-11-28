@@ -10,7 +10,9 @@ import {
   Inject,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  Renderer2,
+  RendererFactory2
 } from '@angular/core';
 import { ClassnameService } from '@app/core/services/classname.service';
 import { MenuService } from './menu.service';
@@ -34,51 +36,71 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
   indent = 40;
 
   @Input()
-  defaultOpenKey: string[] = [];
+  isCollapsed = false;
 
   @Input()
-  selectedKey = '';
+  width = 240;
 
-  private destroy$ = new Subject();
+  private _destroy$ = new Subject();
+  private _renderer: Renderer2 = this._rendererFactory2.createRenderer(null, null);
+  private _collapsedWidth = 40;
+
   constructor(
-    private eleRef: ElementRef,
-    private classnameSer: ClassnameService,
-    private menuSer: MenuService,
-    @Inject(MENU_CONFIG) private menu: MenuConfig
+    private _eleRef: ElementRef,
+    private _classnameSer: ClassnameService,
+    private _menuSer: MenuService,
+    private _rendererFactory2: RendererFactory2,
+    @Inject(MENU_CONFIG) private _menuConf: MenuConfig
   ) {}
 
-  private setClassName() {
-    const prefix = this.menu.menuPrefix;
-    this.classnameSer.updateClassName(this.eleRef.nativeElement, {
+  private _setClassName() {
+    const prefix = this._menuConf.menuPrefix;
+    this._classnameSer.updateClassName(this._eleRef.nativeElement, {
       [`${prefix}`]: true,
       [`${prefix}-root`]: true
     });
   }
 
+  private _setWidth(width?: string | number) {
+    const w = width || this.width;
+    this._renderer.setStyle(this._eleRef.nativeElement, 'width', typeof w === 'string' ? w : `${w}px`);
+  }
+
   ngOnInit(): void {
-    this.setClassName();
-    const { menuItems, handleMenuItemClick$ } = this.menuSer;
+    this._setClassName();
+    this._setWidth();
+
+    const { menuItems, handleMenuItemClick$, collapsed$ } = this._menuSer;
 
     const list = this.menuItemList.length ? this.menuItemList : menuItems;
 
-    handleMenuItemClick$.pipe(takeUntil(this.destroy$)).subscribe(v => {
+    handleMenuItemClick$.pipe(takeUntil(this._destroy$)).subscribe(v => {
       this.change.emit(v);
       list.forEach(i => {
         i.setSelectedState(i === v);
       });
     });
+
+    collapsed$.pipe(takeUntil(this._destroy$)).subscribe(v => {
+      this._setWidth(v ? this._collapsedWidth : this.width);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.indent) {
-      this.menuSer.setIndent(this.indent);
+      this._menuSer.setIndent(this.indent);
     }
 
-    if (changes.defaultOpenKey) {
+    if (changes.isCollapsed) {
+      this._menuSer.setCollapsed(this.isCollapsed);
+    }
+
+    if (changes.width) {
+      this._setWidth();
     }
   }
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

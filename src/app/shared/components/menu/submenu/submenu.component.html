@@ -1,24 +1,37 @@
-<div
-  #SubMenu
-  class="z-menu-sub"
-  [ngClass]="classMap"
-  [style.paddingLeft.px]="paddingLeft"
-  (mouseenter)="setMouseEnterState(true)"
-  (mouseleave)="setMouseEnterState(false)"
-  matRipple
->
-  <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-  <ng-content select="[icon]" *ngIf="!icon"></ng-content>
+<ng-container *ngIf="isCollapsed; else CollapsedTemplate">
+  <div #SubMenu class="z-menu-sub" [ngClass]="classMap" matRipple mat-button [matMenuTriggerFor]="CollapsedSubMenu">
+    <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+    <ng-content select="[icon]" *ngIf="!icon"></ng-content>
+  </div>
 
-  <ng-container *zStringTemplateOutlet="title"
-    ><span class="z-menu-label">{{ title }}</span></ng-container
+  <mat-menu #CollapsedSubMenu="matMenu" class="z-menu-sub-collapsed">
+    <ng-template [ngTemplateOutlet]="SubMenuTemplate"></ng-template>
+  </mat-menu>
+</ng-container>
+
+<ng-template #CollapsedTemplate>
+  <div
+    #SubMenu
+    class="z-menu-sub"
+    [ngClass]="classMap"
+    [style.paddingLeft.px]="paddingLeft"
+    (mouseenter)="setMouseEnterState(true)"
+    (mouseleave)="setMouseEnterState(false)"
+    matRipple
   >
-  <ng-content select="[title]" *ngIf="!title"></ng-content>
-</div>
+    <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+    <ng-content select="[icon]" *ngIf="!icon"></ng-content>
 
-<div [@collapseMotion]="expandState" class="z-menu-submenu">
-  <ng-template [ngTemplateOutlet]="SubMenuTemplate"></ng-template>
-</div>
+    <ng-container *zStringTemplateOutlet="title">
+      <span class="z-menu-label">{{ title }}</span>
+    </ng-container>
+    <ng-content select="[title]" *ngIf="!title"></ng-content>
+  </div>
+
+  <div [@collapseMotion]="expandState" class="z-menu-submenu">
+    <ng-template [ngTemplateOutlet]="SubMenuTemplate"></ng-template>
+  </div>
+</ng-template>
 
 <ng-template #SubMenuTemplate>
   <ng-content></ng-content>

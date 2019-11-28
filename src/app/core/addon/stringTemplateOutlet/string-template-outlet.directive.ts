@@ -26,7 +26,7 @@ export class StringTemplateOutletDirective implements OnChanges {
     }
   }
 
-  private _isTemplate: boolean = false;
+  private _isTemplate = false;
   private _inputTemplate: TemplateRef<any> | null = null;
   private _inputViewRef: EmbeddedViewRef<any> | null = null;
   private _defaultViewRef: EmbeddedViewRef<void> | null = null;

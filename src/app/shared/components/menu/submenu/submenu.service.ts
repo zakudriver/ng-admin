@@ -5,7 +5,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class SubmenuService {
   disabled = false;
   level$ = new BehaviorSubject<number>(1);
-  subMenuOpen$ = new BehaviorSubject<boolean>(false);
+  // subMenuOpen$ = new BehaviorSubject<boolean>(false);
   open$ = new BehaviorSubject<boolean>(false);
   mouseEnterLeave$ = new Subject<boolean>();
   subIndent$ = new BehaviorSubject<number>(16);

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { MenuItemComponent } from './menu-item/menu-item.component';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, switchMap, mergeMap, pairwise } from 'rxjs/operators';
 
 @Injectable()
@@ -9,6 +9,7 @@ export class MenuService {
   handleMenuItemClick$ = new Subject<MenuItemComponent>();
   menuOpen$ = new BehaviorSubject<boolean>(false);
   indent$ = new BehaviorSubject<number>(40);
+  collapsed$ = new BehaviorSubject<boolean>(true);
 
   menuItems: MenuItemComponent[] = [];
   router$ = this._router.events.pipe(filter(i => i instanceof NavigationEnd));
@@ -16,18 +17,18 @@ export class MenuService {
   //   mergeMap(i => i)
   // );
 
-  constructor(private _router: Router) {
-    // this.router$.subscribe(r => {
-    //   console.log(r);
-    // });
-  }
+  constructor(private _router: Router, private activatedRoute: ActivatedRoute) {}
 
   handleMenuItemClick(v: MenuItemComponent) {
     this.handleMenuItemClick$.next(v);
   }
 
-  setIndent(v: number): void {
+  setIndent(v: number) {
     this.indent$.next(v);
+  }
+
+  setCollapsed(v: boolean) {
+    this.collapsed$.next(v);
   }
 
   addMenuItem(v: MenuItemComponent) {
