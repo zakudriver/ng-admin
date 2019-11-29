@@ -1,5 +1,12 @@
 <ng-container *ngIf="isCollapsed; else CollapsedTemplate">
-  <div #SubMenu class="z-menu-sub" [ngClass]="classMap" matRipple mat-button [matMenuTriggerFor]="CollapsedSubMenu">
+  <div
+    #SubMenu
+    class="z-menu-sub"
+    [ngClass]="classMap"
+    [style.paddingLeft.px]="paddingLeft"
+    matRipple
+    [matMenuTriggerFor]="CollapsedSubMenu"
+  >
     <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
     <ng-content select="[icon]" *ngIf="!icon"></ng-content>
   </div>
@@ -10,15 +17,7 @@
 </ng-container>
 
 <ng-template #CollapsedTemplate>
-  <div
-    #SubMenu
-    class="z-menu-sub"
-    [ngClass]="classMap"
-    [style.paddingLeft.px]="paddingLeft"
-    (mouseenter)="setMouseEnterState(true)"
-    (mouseleave)="setMouseEnterState(false)"
-    matRipple
-  >
+  <div class="z-menu-sub" [ngClass]="classMap" [style.paddingLeft.px]="paddingLeft" matRipple>
     <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
     <ng-content select="[icon]" *ngIf="!icon"></ng-content>
 

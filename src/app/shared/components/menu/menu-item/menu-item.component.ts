@@ -23,23 +23,14 @@ import { Router } from '@angular/router';
 @Component({
   selector: '[z-menu-item]',
   template: `
-    <ng-container *ngIf="isCollapsed; else CollapsedTemplate">
-      <div matRipple [ngClass]="classMap">
-        <mat-icon style="margin-right:0;" *ngIf="icon">{{ icon }}</mat-icon>
-        <ng-content select="[icon]" *ngIf="!icon"></ng-content>
-      </div>
-    </ng-container>
+    <div matRipple [style.paddingLeft.px]="paddingLeft" [ngClass]="classMap">
+      <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+      <ng-content select="[icon]" *ngIf="!icon"></ng-content>
 
-    <ng-template #CollapsedTemplate>
-      <div matRipple [style.paddingLeft.px]="paddingLeft" [ngClass]="classMap">
-        <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-        <ng-content select="[icon]" *ngIf="!icon"></ng-content>
-
-        <span class="z-menu-label" *ngIf="!isCollapsed">
-          <ng-content></ng-content>
-        </span>
-      </div>
-    </ng-template>
+      <span class="z-menu-label" *ngIf="isTitle">
+        <ng-content></ng-content>
+      </span>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -61,11 +52,13 @@ export class MenuItemComponent implements OnInit, OnDestroy {
   @Input()
   routerLink: string[] = [];
 
+  isTitle = true;
+
   // @ViewChild('MenuItem', { read: ElementRef, static: false })
   // menuItemEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
   // selected$ = new Subject<boolean>();
   paddingLeft = 0;
-  isCollapsed = false;
+  // isCollapsed = false;
 
   classMap = {};
 
@@ -81,6 +74,9 @@ export class MenuItemComponent implements OnInit, OnDestroy {
     private _router: Router
   ) {
     _menuSer.addMenuItem(this);
+    if (_submenuSer) {
+      _submenuSer.addSubMenuItems(this);
+    }
   }
 
   clickMenuItem(e: MouseEvent) {
@@ -89,6 +85,11 @@ export class MenuItemComponent implements OnInit, OnDestroy {
       e.preventDefault();
       return;
     }
+
+    if (this._submenuSer) {
+      this._submenuSer.subMenuTrigger.closeMenu();
+    }
+
     this._menuSer.handleMenuItemClick(this);
   }
 
@@ -104,7 +105,8 @@ export class MenuItemComponent implements OnInit, OnDestroy {
       [`${prefix}-item`]: true,
       [`${prefix}-selected`]: this.selected,
       [`${prefix}-disabled`]: this.disabled,
-      ['primaryColor']: this.selected
+      ['primaryColor']: this.selected,
+      [`${prefix}-collapsed`]: true
     };
   }
 
@@ -123,9 +125,9 @@ export class MenuItemComponent implements OnInit, OnDestroy {
     merge(indent$, collapsed$, this._submenuSer ? this._submenuSer.level$ : EMPTY)
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
-        this.isCollapsed = collapsed$.value;
+        this.isTitle = this._submenuSer ? true : !collapsed$.value;
         if (collapsed$.value) {
-          this.paddingLeft = 0;
+          this.paddingLeft = 16;
         } else {
           const level = this._submenuSer ? this._submenuSer.level$.value : 0;
 
@@ -138,6 +140,8 @@ export class MenuItemComponent implements OnInit, OnDestroy {
     if (this._submenuSer && isSelected) {
       this._submenuSer.setOpenState(isSelected);
     }
+
+    this._setClassName();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

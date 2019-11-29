@@ -5,18 +5,18 @@ menuPrefix = $prefix + '-menu'
 .{menuPrefix}
   &-root, ul
     margin 0
-    padding 0
+    padding 8px 0
     list-style none
 
   &-item, &-sub
-    padding 10px 8px
+    height 48px
+    padding 0 16px
     cursor pointer
     display flex
     align-items center
 
     mat-icon
       $iconWidth = 16px
-      margin-right 10px
       font-size $iconWidth
       width $iconWidth
       height $iconWidth
@@ -29,6 +29,7 @@ menuPrefix = $prefix + '-menu'
 
   &-label
     line-height 1.75
+    margin-left 10px
 
   &-submenu 
     & > ul
@@ -40,3 +41,6 @@ menuPrefix = $prefix + '-menu'
   &-selected
     font-weight 500
     background-color rgba(0, 0, 0, 0.05)
+
+  &-collapsed
+    justify-content center

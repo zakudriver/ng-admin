@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Input,
   TemplateRef,
-  ElementRef,
   OnDestroy,
   Inject,
   ChangeDetectorRef,
@@ -18,6 +17,7 @@ import { MENU_CONFIG, MenuConfig } from '../menu.config';
 import { InputBoolean } from '@app/core/utils/convert';
 import { MenuService } from '../menu.service';
 import { collapseMotion } from '@app/core/animations/menu.motion';
+import { MatMenuTrigger } from '@angular/material';
 
 @Component({
   selector: '[z-submenu]',
@@ -37,15 +37,12 @@ export class SubmenuComponent implements OnInit, OnDestroy {
   @Input() subIndent = 16;
   @Input() icon = '';
 
-  @ViewChild('SubMenu', { read: ElementRef, static: false })
-  subMenuEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
+  @ViewChild(MatMenuTrigger, { read: MatMenuTrigger, static: false }) subMenuEle: MatMenuTrigger = {} as MatMenuTrigger;
 
   paddingLeft = 0;
   expandState = 'collapsed';
   isCollapsed = false;
   classMap = {};
-
-  private _isMouseHover = false;
 
   private _destroy$ = new Subject<void>();
   constructor(
@@ -55,22 +52,16 @@ export class SubmenuComponent implements OnInit, OnDestroy {
     @Inject(MENU_CONFIG) private _menu: MenuConfig
   ) {}
 
-  private _setOpenState(open: boolean): void {
-    this._submenuSer.setOpenState(open);
-  }
-
   clickSubMenuTitle(e: Event): void {
     e.stopPropagation();
-    if (!this.disabled) {
+    if (!this.disabled && !this.isCollapsed) {
       const { open$ } = this._submenuSer;
       this._setOpenState(!open$.value);
     }
   }
 
-  setMouseEnterState(value: boolean): void {
-    this._isMouseHover = value;
-    this._setClassName();
-    this._submenuSer.setMouseEnterState(value);
+  private _setOpenState(open: boolean): void {
+    this._submenuSer.setOpenState(open);
   }
 
   private _setClassName(): void {
@@ -82,7 +73,7 @@ export class SubmenuComponent implements OnInit, OnDestroy {
       [`${prefix}-disabled`]: this.disabled,
       [`${prefix}-open`]: open$.value,
       [`${prefix}-submenu-selected`]: open$.value,
-      [`${prefix}-active`]: this._isMouseHover && !this.disabled
+      [`${prefix}-collapsed`]: this.isCollapsed
     };
   }
 
@@ -91,9 +82,6 @@ export class SubmenuComponent implements OnInit, OnDestroy {
     const { open$, level$, subIndent$ } = this._submenuSer;
 
     open$.pipe(takeUntil(this._destroy$)).subscribe(v => {
-      // if (v !== open$.value) {
-      //   this.open = v;
-      // }
       this.expandState = v ? 'expanded' : 'collapsed';
       this._setClassName();
     });
@@ -102,7 +90,7 @@ export class SubmenuComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
         if (collapsed$.value) {
-          this.paddingLeft = 0;
+          this.paddingLeft = 16;
         } else {
           this.paddingLeft = indent$.value + subIndent$.value * (level$.value - 1);
         }
@@ -110,6 +98,8 @@ export class SubmenuComponent implements OnInit, OnDestroy {
         this.isCollapsed = collapsed$.value;
         this._cdr.markForCheck();
       });
+
+    this._setClassName();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -120,6 +110,10 @@ export class SubmenuComponent implements OnInit, OnDestroy {
     if (changes.subIndent) {
       this._submenuSer.setSubIndent(this.subIndent);
     }
+  }
+
+  ngAfterViewInit(): void {
+    this._submenuSer.setSubMenuTrigger(this.subMenuEle);
   }
 
   ngOnDestroy(): void {

@@ -43,7 +43,7 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
 
   private _destroy$ = new Subject();
   private _renderer: Renderer2 = this._rendererFactory2.createRenderer(null, null);
-  private _collapsedWidth = 40;
+  private _collapsedWidth = 60;
 
   constructor(
     private _eleRef: ElementRef,
