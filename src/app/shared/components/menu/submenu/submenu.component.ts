@@ -16,7 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
 import { InputBoolean } from '@app/core/utils/convert';
 import { MenuService } from '../menu.service';
-import { collapseMotion } from '@app/core/animations/menu.motion';
+import { collapseMotion } from '@app/shared/components/menu/menu.motion';
 import { MatMenuTrigger } from '@angular/material';
 
 @Component({
@@ -75,6 +75,8 @@ export class SubmenuComponent implements OnInit, OnDestroy {
       [`${prefix}-submenu-selected`]: open$.value,
       [`${prefix}-collapsed`]: this.isCollapsed
     };
+
+    this._cdr.markForCheck();
   }
 
   ngOnInit() {
@@ -96,10 +98,9 @@ export class SubmenuComponent implements OnInit, OnDestroy {
         }
 
         this.isCollapsed = collapsed$.value;
-        this._cdr.markForCheck();
-      });
 
-    this._setClassName();
+        this._setClassName();
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

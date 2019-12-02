@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { sidebarMotion } from '@app/core/animations/sidebar.motion';
 import { LayoutService } from '@app/layout/layout.service';
 import { MenuItemComponent } from '@app/shared/components/menu/menu-item/menu-item.component';
 import { IMenu, IMenuTree, MENU_CONFIG } from '@app/config/menu.config';
@@ -7,12 +6,12 @@ import { IMenu, IMenuTree, MENU_CONFIG } from '@app/config/menu.config';
 @Component({
   selector: 'z-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.styl'],
-  animations: sidebarMotion
+  styleUrls: ['./sidebar.component.styl']
 })
 export class SidebarComponent implements OnInit {
   tree: IMenuTree[] = [];
   path = '/sign';
+
   constructor(public layoutSer: LayoutService, @Inject(MENU_CONFIG) private menu: IMenu[]) {
     this.tree = this.handleTree(menu);
   }

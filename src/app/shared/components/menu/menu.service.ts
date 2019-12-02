@@ -9,7 +9,7 @@ export class MenuService {
   handleMenuItemClick$ = new Subject<MenuItemComponent>();
   menuOpen$ = new BehaviorSubject<boolean>(false);
   indent$ = new BehaviorSubject<number>(40);
-  collapsed$ = new BehaviorSubject<boolean>(true);
+  collapsed$ = new BehaviorSubject<boolean>(false);
 
   menuItems: MenuItemComponent[] = [];
   router$ = this._router.events.pipe(filter(i => i instanceof NavigationEnd));

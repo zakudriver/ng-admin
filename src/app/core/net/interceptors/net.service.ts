@@ -1,19 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
-import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpHandler,
-  HttpSentEvent,
-  HttpHeaderResponse,
-  HttpProgressEvent,
-  HttpResponse,
-  HttpErrorResponse,
-  HttpHeaders
-} from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { mergeMap, catchError } from 'rxjs/operators';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { APP_CONFIG, AppConfig } from '@app/config/app.config';
-import { TokenField } from '@app/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +16,7 @@ export class NetService implements HttpInterceptor {
 
   private _headers(): HttpHeaders {
     return new HttpHeaders({
-      Authorization: `Bearer ' ${localStorage.getItem(TokenField) || ''}`
+      // Authorization: `Bearer ' ${localStorage.getItem(TokenField) || ''}`
     });
   }
 

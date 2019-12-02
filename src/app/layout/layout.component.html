@@ -1,13 +1,20 @@
 <z-header></z-header>
 
-<mat-sidenav-container class="main">
-  <mat-sidenav [mode]="layoutSer.mode" [opened]="layoutSer.isOpen">
+<!-- <mat-drawer-container class="main" autosize>
+  <mat-drawer mode="side" [opened]="true">
     <z-sidebar></z-sidebar>
-  </mat-sidenav>
+  </mat-drawer>
 
-  <mat-sidenav-content>
+  <mat-drawer-content>
     <div class="content">
-    <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </mat-drawer-content>
+</mat-drawer-container> -->
+
+<div class="main">
+  <z-sidebar></z-sidebar>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -122,7 +122,7 @@ export class ArticleComponent implements OnInit {
   constructor(private http: HttpClientService) {}
 
   ontest() {
-    this.http.get('ontest', '/usersvc/auth').subscribe(r => {
+    this.http.get('ontest', '/usersvc/logout').subscribe(r => {
       console.log(r);
     });
   }

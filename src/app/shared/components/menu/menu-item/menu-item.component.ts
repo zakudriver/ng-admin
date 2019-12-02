@@ -56,9 +56,8 @@ export class MenuItemComponent implements OnInit, OnDestroy {
 
   // @ViewChild('MenuItem', { read: ElementRef, static: false })
   // menuItemEle: ElementRef<HTMLDivElement> = {} as ElementRef<HTMLDivElement>;
-  // selected$ = new Subject<boolean>();
   paddingLeft = 0;
-  // isCollapsed = false;
+  isCollapsed = false;
 
   classMap = {};
 
@@ -86,7 +85,7 @@ export class MenuItemComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this._submenuSer) {
+    if (this._submenuSer && this._menuSer.collapsed$.value) {
       this._submenuSer.subMenuTrigger.closeMenu();
     }
 
@@ -96,7 +95,6 @@ export class MenuItemComponent implements OnInit, OnDestroy {
   setSelectedState(v: boolean) {
     this.selected = v;
     this._setClassName();
-    this._cdr.markForCheck();
   }
 
   private _setClassName() {
@@ -106,11 +104,13 @@ export class MenuItemComponent implements OnInit, OnDestroy {
       [`${prefix}-selected`]: this.selected,
       [`${prefix}-disabled`]: this.disabled,
       ['primaryColor']: this.selected,
-      [`${prefix}-collapsed`]: true
+      [`${prefix}-collapsed`]: this.isCollapsed
     };
+
+    this._cdr.markForCheck();
   }
 
-  private _handleUrlIsSelected(url: string): boolean {
+  private _handleUrlSelected(url: string): boolean {
     if (this.routerLink.length) {
       return this.routerLink[0].replace(/\?{1}.*$/, '') === url;
     }
@@ -125,23 +125,23 @@ export class MenuItemComponent implements OnInit, OnDestroy {
     merge(indent$, collapsed$, this._submenuSer ? this._submenuSer.level$ : EMPTY)
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
+        this.isCollapsed = collapsed$.value;
         this.isTitle = this._submenuSer ? true : !collapsed$.value;
         if (collapsed$.value) {
           this.paddingLeft = 16;
         } else {
           const level = this._submenuSer ? this._submenuSer.level$.value : 0;
-
-          this.paddingLeft = (level ? this._submenuSer.subIndent$.value * level : 0) + indent$.value;
+          this.paddingLeft = (this._submenuSer ? this._submenuSer.subIndent$.value * level : 0) + indent$.value;
         }
+
+        this._setClassName();
       });
 
-    const isSelected = this._handleUrlIsSelected(this._router.url);
+    const isSelected = this._handleUrlSelected(this._router.url);
     this.setSelectedState(isSelected);
     if (this._submenuSer && isSelected) {
       this._submenuSer.setOpenState(isSelected);
     }
-
-    this._setClassName();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

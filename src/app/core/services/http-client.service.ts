@@ -68,38 +68,37 @@ export class HttpClientService {
       tap(r => {
         this._loggerSer.responseLog(r, func);
       }),
-      // map(r => {
-      //   return r;
-      // }),
       catchError((msg: HttpErrorResponse) => {
-        this._snackBar.open(msg.error.msg);
+        if (msg.error.msg) {
+          this._snackBar.open(msg.error.msg);
+        }
         this._loggerSer.error(msg.error);
         return of({
           msg: msg.error.msg,
           data: def || null,
-          error: msg.error.msg
+          error: msg.error.msg || 'error'
         } as IResponse);
       })
     );
   }
 
-  get<T>(func: string, url: string, params?: Params, opt?: IRequestOpt): Observable<IResponse<T>> {
+  get<T>(func: string, url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
     const option = this._makeOpt('get', params, opt);
-    return this._handleRequest<T>(func, 'get', url, option);
+    return this._handleRequest<T>(func, 'get', url, option, def);
   }
 
-  post<T>(func: string, url: string, params?: Params, opt?: IRequestOpt): Observable<IResponse<T>> {
+  post<T>(func: string, url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
     const option = this._makeOpt('post', params, opt);
-    return this._handleRequest<T>(func, 'post', url, option);
+    return this._handleRequest<T>(func, 'post', url, option, def);
   }
 
-  put<T>(func: string, url: string, params?: Params, opt?: IRequestOpt): Observable<IResponse<T>> {
+  put<T>(func: string, url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
     const option = this._makeOpt('put', params, opt);
-    return this._handleRequest<T>(func, 'put', url, option);
+    return this._handleRequest<T>(func, 'put', url, option, def);
   }
 
-  delete<T>(func: string, url: string, params?: Params, opt?: IRequestOpt): Observable<IResponse<T>> {
+  delete<T>(func: string, url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
     const option = this._makeOpt('delete', params, opt);
-    return this._handleRequest<T>(func, 'delete', url, option);
+    return this._handleRequest<T>(func, 'delete', url, option, def);
   }
 }

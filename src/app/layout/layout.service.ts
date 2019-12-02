@@ -4,6 +4,11 @@ import { Injectable } from '@angular/core';
 export class LayoutService {
   isOpen = true;
   mode = 'side';
+  isCollapsed = false;
 
   constructor() {}
+
+  setCollapsedState(state: boolean) {
+    this.isCollapsed = state;
+  }
 }

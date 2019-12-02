@@ -19,7 +19,7 @@
     <ng-container *ngTemplateOutlet="MenuList; context: { k: tree }"></ng-container>
   </ul> -->
 
-  <ul z-menu>
+  <ul class="sidebar-menu" z-menu [isCollapsed]="layoutSer.isCollapsed">
     <z-recursive-tree [data]="tree"></z-recursive-tree>
   </ul>
 </div>

@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { CacheService } from '@app/core/services/cache.service';
 import { LayoutService } from '@app/layout/layout.service';
+import { UserService } from '@app/services/user.service';
 
 @Component({
   selector: 'z-sign',
@@ -32,7 +33,8 @@ export class SignComponent implements OnInit {
     private _http: HttpClientService,
     private _snackBar: MatSnackBar,
     private _router: Router,
-    private _cacheSer: CacheService
+    private _cacheSer: CacheService,
+    private _userSer: UserService
   ) {}
 
   open() {
@@ -63,11 +65,7 @@ export class SignComponent implements OnInit {
   }
 
   submitSignIn() {
-    const params = this.signInForm.value;
-    this._http.post('submitSignIn', '/usersvc/login', params).subscribe(r => {
-      if (!r.error) {
-        this._router.navigateByUrl('/');
-      }
+    this._userSer.login(this.signInForm.value).subscribe(r => {
       this._snackBar.open(r.msg);
     });
   }
