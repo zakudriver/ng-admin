@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 })
 export class UserService {
   redirectUrl = '/';
-  userInfo: IUserInfo | null = null;
+  userInfo: IUserInfo = null!;
 
   constructor(private _http: HttpClientService, private _router: Router) {}
 

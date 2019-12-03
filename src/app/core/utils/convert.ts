@@ -1,12 +1,8 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceCssPixelValue } from '@angular/cdk/coercion';
 
-export function toBoolean(value: boolean | string): boolean {
-  return coerceBooleanProperty(value);
-}
-
-function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (target: any, propName: string) => void {
-  function propDecorator(target: any, propName: string): void {
-    const privatePropName = `$$__${propName}`;
+function propDecoratorFactory<T, D>(name: string, fb: (v: T) => D): PropertyDecorator {
+  return (target, propName) => {
+    const privatePropName = `$$__${propName as string}`;
 
     if (Object.prototype.hasOwnProperty.call(target, privatePropName)) {
       console.warn(`The prop "${privatePropName}" is already exist, it will be overrided by ${name} decorator.`);
@@ -22,14 +18,20 @@ function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (targe
         return this[privatePropName];
       },
       set(value: T): void {
-        this[privatePropName] = fallback(value);
+        const v = fb(value);
+        if (typeof v === 'undefined') {
+          return;
+        }
+        this[privatePropName] = fb(value);
       }
     });
-  }
-
-  return propDecorator;
+  };
 }
 
 export function InputBoolean(): PropertyDecorator {
-  return propDecoratorFactory('InputBoolean', toBoolean) as PropertyDecorator;
+  return propDecoratorFactory<any, boolean>('InputBoolean', coerceBooleanProperty);
+}
+
+export function InputPx(): PropertyDecorator {
+  return propDecoratorFactory<string | number, string>('InputPx', coerceCssPixelValue);
 }

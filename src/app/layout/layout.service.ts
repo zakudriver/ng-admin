@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class LayoutService {
-  isOpen = true;
   mode = 'side';
   isCollapsed = false;
+  sidebarWidth = '240px';
+  collapsedWidth = '60px';
 
   constructor() {}
 

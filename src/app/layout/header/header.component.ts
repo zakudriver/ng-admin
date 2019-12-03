@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { LayoutService } from '@app/layout/layout.service';
 
 @Component({
@@ -11,6 +11,10 @@ export class HeaderComponent implements OnInit {
 
   setCollapsedState() {
     this.layoutSer.setCollapsedState(!this.layoutSer.isCollapsed);
+  }
+
+  handleLogout() {
+    console.log(1);
   }
 
   ngOnInit() {}

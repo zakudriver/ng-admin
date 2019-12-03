@@ -20,6 +20,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MENU_CONFIG, MenuConfig } from './menu.config';
 import { MenuItemComponent } from './menu-item/menu-item.component';
+import { InputPx } from '@app/core/utils/convert';
 
 @Directive({
   selector: '[z-menu]',
@@ -39,11 +40,15 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
   isCollapsed = false;
 
   @Input()
+  @InputPx()
   width = 240;
+
+  @Input()
+  @InputPx()
+  collapsedWidth = 60;
 
   private _destroy$ = new Subject();
   private _renderer: Renderer2 = this._rendererFactory2.createRenderer(null, null);
-  private _collapsedWidth = 60;
 
   constructor(
     private _eleRef: ElementRef,
@@ -63,7 +68,7 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
 
   private _setWidth(width?: string | number) {
     const w = width || this.width;
-    this._renderer.setStyle(this._eleRef.nativeElement, 'width', typeof w === 'string' ? w : `${w}px`);
+    this._renderer.setStyle(this._eleRef.nativeElement, 'width', w);
   }
 
   ngOnInit(): void {
@@ -82,7 +87,7 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
     });
 
     collapsed$.pipe(takeUntil(this._destroy$)).subscribe(v => {
-      this._setWidth(v ? this._collapsedWidth : this.width);
+      this._setWidth(v ? this.collapsedWidth : this.width);
     });
   }
 
