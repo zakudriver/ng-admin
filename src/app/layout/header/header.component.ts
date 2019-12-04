@@ -17,7 +17,11 @@ export class HeaderComponent implements OnInit {
   @MethodLog()
   handleLogout() {
     console.log(this.setCollapsedState);
-    return 1;
+    return new Promise((res, rej) => {
+      setTimeout(() => {
+        res('ok');
+      }, 4000);
+    });
   }
 
   ngOnInit() {}

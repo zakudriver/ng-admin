@@ -66,7 +66,7 @@ export class HttpClientService {
   ): Observable<IResponse<T>> {
     return this._http.request<IResponse<T>>(method, url, option).pipe(
       tap(r => {
-        this._loggerSer.responseLog(r, func);
+        this._loggerSer.responseLog(r);
       }),
       catchError((err: HttpErrorResponse) => {
         if (err.error.msg) {

@@ -38,93 +38,46 @@ export function InputPx(): PropertyDecorator {
   return propDecoratorFactory<string | number, string>('InputPx', coerceCssPixelValue);
 }
 
-export function MethodLog(print?: (message?: any, ...optionalParams: any[]) => void): MethodDecorator {
+export function MethodLog(printFunc?: typeof console.log): MethodDecorator {
   return (target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
-    const v = descriptor.value;
+    if (descriptor) {
+      return {
+        configurable: true,
+        enumerable: false,
+        get() {
+          Object.defineProperty(this, propertyKey, {
+            enumerable: false,
+            writable: true,
+            configurable: true,
+            value: (...args: any[]) => {
+              const printer = () => {
+                console.log(`%c function: ${propertyKey as string}`, `color:#fff;background:#f44336`);
+              };
 
-    descriptor.value = (...args: any[]) => {
-      const k = typeof propertyKey === 'string' ? propertyKey : propertyKey.toString();
-
-      const handle = () => {
-        if (print) {
-          print(k);
-        } else {
-          console.log(`%c function: ${k}`, `color:#fff;background:#f44336`);
+              const r = descriptor.value.apply(this, args);
+              if (r instanceof Promise) {
+                return r.then(() => {
+                  printer();
+                });
+              } else if (r instanceof Observable) {
+                return r.pipe(
+                  tap(() => {
+                    printer();
+                  })
+                );
+              }
+              printer();
+              return r;
+            }
+          });
+          return this[propertyKey];
+        },
+        set: value => {
+          console.error("method for [MethodLog] decorator can't set");
         }
       };
-
-      console.log(target);
-      const r = v.apply(target, args);
-      if (r instanceof Promise) {
-        return r.then(() => {
-          handle();
-        });
-      } else if (r instanceof Observable) {
-        return r.pipe(
-          tap(() => {
-            handle();
-          })
-        );
-      } else {
-        handle();
-      }
-    };
-  };
-}
-export const InputSelf = makePropDecorator('Input', (bindingPropertyName?: string) => ({
-  bindingPropertyName
-}));
-
-export const PROP_METADATA = '__prop__metadata__';
-
-export function makePropDecorator(
-  name: string,
-  props?: (...args: any[]) => any,
-  parentClass?: any,
-  additionalProcessing?: (target: any, name: string, ...args: any[]) => void
-): any {
-  const metaCtor = makeMetadataCtor(props);
-
-  function PropDecoratorFactory(this: unknown | typeof PropDecoratorFactory, ...args: any[]): any {
-    if (this instanceof PropDecoratorFactory) {
-      metaCtor.apply(this, args);
-      return this;
     }
 
-    const decoratorInstance = new (<any>PropDecoratorFactory)(...args);
-
-    function PropDecorator(target: any, name: string) {
-      const constructor = target.constructor;
-      // Use of Object.defineProperty is important since it creates non-enumerable property which
-      // prevents the property is copied during subclassing.
-      const meta = constructor.hasOwnProperty(PROP_METADATA)
-        ? (constructor as any)[PROP_METADATA]
-        : Object.defineProperty(constructor, PROP_METADATA, { value: {} })[PROP_METADATA];
-      meta[name] = (meta.hasOwnProperty(name) && meta[name]) || [];
-      meta[name].unshift(decoratorInstance);
-
-      if (additionalProcessing) additionalProcessing(target, name, ...args);
-    }
-
-    return PropDecorator;
-  }
-
-  if (parentClass) {
-    PropDecoratorFactory.prototype = Object.create(parentClass.prototype);
-  }
-
-  PropDecoratorFactory.prototype.ngMetadataName = name;
-  (<any>PropDecoratorFactory).annotationCls = PropDecoratorFactory;
-  return PropDecoratorFactory;
-}
-
-function makeMetadataCtor(props?: (...args: any[]) => any): any {
-  return function ctor(this: any, ...args: any[]) {
-    if (props) {
-      const values = props(...args);
-      for (const propName in values) {
-        this[propName] = values[propName];
-      }
-    }
+    throw new Error('[MethodLog] decorator only decorate method');
   };
 }
