@@ -14,7 +14,7 @@ import { SubmenuService } from './submenu.service';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
-import { InputBoolean } from '@app/core/utils/convert';
+import { InputBoolean } from '@app/core/utils/decorator';
 import { MenuService } from '../menu.service';
 import { collapseMotion } from '@app/shared/components/menu/menu.motion';
 import { MatMenuTrigger } from '@angular/material';

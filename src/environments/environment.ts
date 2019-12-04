@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  http: 'http://127.0.0.1:8999',
-  socket: 'http://127.0.0.2:7999',
+  http: 'http://127.0.0.1:4001',
+  socket: 'http://127.0.0.2:7999'
 };
 
 /*

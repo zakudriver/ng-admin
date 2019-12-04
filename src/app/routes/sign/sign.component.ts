@@ -57,16 +57,18 @@ export class SignComponent implements OnInit {
     const params = Object.assign({ codeID }, this.signUpForm.value);
 
     this._http.post('submitSignUp', '/usersvc/register', params).subscribe(r => {
-      if (!r.error) {
+      if (r.msg) {
         this.isActive = false;
+        this._snackBar.open(r.msg);
       }
-      this._snackBar.open(r.msg);
     });
   }
 
   submitSignIn() {
     this._userSer.login(this.signInForm.value).subscribe(r => {
-      this._snackBar.open(r.msg);
+      if (r.msg) {
+        this._snackBar.open(r.msg);
+      }
     });
   }
 

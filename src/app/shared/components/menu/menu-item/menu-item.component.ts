@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { Subject, merge, EMPTY } from 'rxjs';
 import { MenuService } from '../menu.service';
-import { InputBoolean } from '@app/core/utils/convert';
+import { InputBoolean } from '@app/core/utils/decorator';
 import { MENU_CONFIG, MenuConfig } from '../menu.config';
 import { SubmenuService } from '../submenu/submenu.service';
 import { takeUntil } from 'rxjs/operators';

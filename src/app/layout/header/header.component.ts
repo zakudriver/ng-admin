@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { LayoutService } from '@app/layout/layout.service';
+import { MethodLog } from '@app/core/utils/decorator';
 
 @Component({
   selector: 'z-header',
@@ -13,8 +14,10 @@ export class HeaderComponent implements OnInit {
     this.layoutSer.setCollapsedState(!this.layoutSer.isCollapsed);
   }
 
+  @MethodLog()
   handleLogout() {
-    console.log(1);
+    console.log(this.setCollapsedState);
+    return 1;
   }
 
   ngOnInit() {}

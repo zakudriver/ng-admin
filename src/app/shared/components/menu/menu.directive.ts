@@ -12,7 +12,8 @@ import {
   OnChanges,
   SimpleChanges,
   Renderer2,
-  RendererFactory2
+  RendererFactory2,
+  forwardRef
 } from '@angular/core';
 import { ClassnameService } from '@app/core/services/classname.service';
 import { MenuService } from './menu.service';
@@ -20,11 +21,22 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MENU_CONFIG, MenuConfig } from './menu.config';
 import { MenuItemComponent } from './menu-item/menu-item.component';
-import { InputPx } from '@app/core/utils/convert';
+import { InputPx, InputSelf } from '@app/core/utils/decorator';
+
+export abstract class Parent {
+  width: string = '';
+}
 
 @Directive({
   selector: '[z-menu]',
-  providers: [ClassnameService, MenuService]
+  providers: [
+    ClassnameService,
+    MenuService,
+    {
+      provide: Parent,
+      useExisting: forwardRef(() => MenuDirective)
+    }
+  ]
 })
 export class MenuDirective implements OnChanges, OnInit, OnDestroy {
   @Output()
@@ -46,6 +58,9 @@ export class MenuDirective implements OnChanges, OnInit, OnDestroy {
   @Input()
   @InputPx()
   collapsedWidth = 60;
+
+  @InputSelf()
+  sss = this._eleRef;
 
   private _destroy$ = new Subject();
   private _renderer: Renderer2 = this._rendererFactory2.createRenderer(null, null);

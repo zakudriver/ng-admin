@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { LoggerService } from './logger.service';
-import { map, tap, catchError, filter } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 
@@ -68,15 +68,16 @@ export class HttpClientService {
       tap(r => {
         this._loggerSer.responseLog(r, func);
       }),
-      catchError((msg: HttpErrorResponse) => {
-        if (msg.error.msg) {
-          this._snackBar.open(msg.error.msg);
+      catchError((err: HttpErrorResponse) => {
+        if (err.error.msg) {
+          this._snackBar.open(err.error.msg);
         }
-        this._loggerSer.error(msg.error);
+        this._loggerSer.error(err.error);
+
         return of({
-          msg: msg.error.msg,
+          msg: '',
           data: def || null,
-          error: msg.error.msg || 'error'
+          error: err.error.msg || 'error'
         } as IResponse);
       })
     );
