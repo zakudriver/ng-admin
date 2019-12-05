@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "zyhua-s-admin": {
+    "ng-admin": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -24,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/zyhua-s-admin",
+            "outputPath": "dist/ng-admin",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -61,24 +61,35 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "zh-Hans": {
+              "aot": true,
+              "outputPath": "dist/under-construction-zh-hans/",
+              "i18nFile": "src/locale/messages.zh-hans.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "zh-Hans",
+              "i18nMissingTranslation": "error"
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "zyhua-s-admin:build"
+            "browserTarget": "ng-admin:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "zyhua-s-admin:build:production"
+              "browserTarget": "ng-admin:build:production"
+            },
+            "zh-Hans": {
+              "browserTarget": "ng-admin:build:zh-Hans"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "zyhua-s-admin:build"
+            "browserTarget": "ng-admin:build"
           }
         },
         "test": {
@@ -102,7 +113,7 @@
         }
       }
     },
-    "zyhua-s-admin-e2e": {
+    "ng-admin-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -111,11 +122,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "zyhua-s-admin:serve"
+            "devServerTarget": "ng-admin:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "zyhua-s-admin:serve:production"
+              "devServerTarget": "ng-admin:serve:production"
             }
           }
         },
@@ -129,5 +140,5 @@
       }
     }
   },
-  "defaultProject": "zyhua-s-admin"
+  "defaultProject": "ng-admin"
 }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from './modules/material/material.module';
@@ -10,4 +10,10 @@ import { MenuModule } from './components/menu/menu.module';
   imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MaterialModule, MenuModule],
   exports: [RouterModule, FormsModule, ReactiveFormsModule, MaterialModule, MenuModule]
 })
-export class SharedModule {}
+export class SharedModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: SharedModule
+    };
+  }
+}

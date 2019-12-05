@@ -11,7 +11,7 @@ import { NetModule } from './core/net/net.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, BrowserAnimationsModule, LayoutModule, RoutesModule, SharedModule, NetModule],
+  imports: [BrowserModule, BrowserAnimationsModule, LayoutModule, RoutesModule, SharedModule.forRoot(), NetModule],
   providers: [APP_CONFIG_PROVIDER],
   bootstrap: [AppComponent]
 })

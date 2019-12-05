@@ -13,7 +13,8 @@ import {
   MatRadioModule,
   MatTableModule,
   MatPaginatorModule,
-  MatDialogModule
+  MatDialogModule,
+  MatTabsModule
 } from '@angular/material';
 import { DEFAULT_GLOBAL_OPTIONS } from './global.config';
 
@@ -33,7 +34,8 @@ import { DEFAULT_GLOBAL_OPTIONS } from './global.config';
     MatRadioModule,
     MatTableModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTabsModule
   ],
   exports: [
     MatButtonModule,
@@ -49,7 +51,8 @@ import { DEFAULT_GLOBAL_OPTIONS } from './global.config';
     MatRadioModule,
     MatTableModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTabsModule
   ],
   providers: [...DEFAULT_GLOBAL_OPTIONS]
 })

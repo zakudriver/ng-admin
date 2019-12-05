@@ -3,7 +3,9 @@
     class="logo"
     [ngStyle]="{ width: layoutSer.isCollapsed ? layoutSer.collapsedWidth : layoutSer.sidebarWidth }"
     #Logo
-  ></div>
+  >
+    <img [src]="layoutSer.isCollapsed ? 'assets/img/logo.svg' : 'assets/img/logo-full.png'" alt="log" />
+  </div>
 
   <div class="menu">
     <ul class="ul menu-l">
