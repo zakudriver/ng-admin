@@ -4,13 +4,12 @@ import { HttpClientService } from '@app/core/services/http-client.service';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { CacheService } from '@app/core/services/cache.service';
-import { LayoutService } from '@app/layout/layout.service';
 import { UserService } from '@app/services/user.service';
 
 @Component({
   selector: 'z-sign',
   templateUrl: './sign.component.html',
-  styleUrls: ['./sign.component.styl']
+  styleUrls: ['./sign.component.sass']
 })
 export class SignComponent implements OnInit {
   isActive = false;
@@ -46,7 +45,7 @@ export class SignComponent implements OnInit {
   }
 
   sendCode() {
-    this._http.post<{ codeId: string }>('sendCode', '/user/code', this.signUpForm.value).subscribe(v => {
+    this._http.post<{ codeId: string }>('/user/code', this.signUpForm.value).subscribe(v => {
       this._snackBar.open(v.msg);
       this._cacheSer.setSession('codeID', v.data.codeId);
     });
@@ -56,7 +55,7 @@ export class SignComponent implements OnInit {
     const codeID = this._cacheSer.getSession('codeID');
     const params = Object.assign({ codeID }, this.signUpForm.value);
 
-    this._http.post('submitSignUp', '/usersvc/register', params).subscribe(r => {
+    this._http.post('/usersvc/register', params).subscribe(r => {
       if (r.msg) {
         this.isActive = false;
         this._snackBar.open(r.msg);

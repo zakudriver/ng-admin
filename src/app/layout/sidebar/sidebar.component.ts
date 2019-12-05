@@ -6,7 +6,7 @@ import { IMenu, IMenuTree, MENU_CONFIG } from '@app/config/menu.config';
 @Component({
   selector: 'z-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.styl']
+  styleUrls: ['./sidebar.component.sass']
 })
 export class SidebarComponent implements OnInit {
   tree: IMenuTree[] = [];

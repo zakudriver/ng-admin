@@ -3,13 +3,10 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'z-front',
   templateUrl: './front.component.html',
-  styleUrls: ['./front.component.styl']
+  styleUrls: ['./front.component.sass']
 })
 export class FrontComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

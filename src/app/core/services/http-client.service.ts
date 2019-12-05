@@ -4,6 +4,7 @@ import { LoggerService } from './logger.service';
 import { tap, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
+import { MethodLog } from '../utils/decorator';
 
 interface IRequestOpt {
   body?: any;
@@ -34,6 +35,7 @@ type Params =
   providedIn: 'root'
 })
 export class HttpClientService {
+  static MethodLog = MethodLog;
   constructor(private _http: HttpClient, private _loggerSer: LoggerService, private _snackBar: MatSnackBar) {}
 
   private _makeOpt(method: string, params: Params | undefined, opt: IRequestOpt | undefined): IRequestOpt {
@@ -57,13 +59,7 @@ export class HttpClientService {
     return option;
   }
 
-  private _handleRequest<T>(
-    func: string,
-    method: string,
-    url: string,
-    option: IRequestOpt,
-    def?: T
-  ): Observable<IResponse<T>> {
+  private _handleRequest<T>(method: string, url: string, option: IRequestOpt, def?: T): Observable<IResponse<T>> {
     return this._http.request<IResponse<T>>(method, url, option).pipe(
       tap(r => {
         this._loggerSer.responseLog(r);
@@ -83,23 +79,23 @@ export class HttpClientService {
     );
   }
 
-  get<T>(func: string, url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
+  get<T>(url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
     const option = this._makeOpt('get', params, opt);
-    return this._handleRequest<T>(func, 'get', url, option, def);
+    return this._handleRequest<T>('get', url, option, def);
   }
 
-  post<T>(func: string, url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
+  post<T>(url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
     const option = this._makeOpt('post', params, opt);
-    return this._handleRequest<T>(func, 'post', url, option, def);
+    return this._handleRequest<T>('post', url, option, def);
   }
 
-  put<T>(func: string, url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
+  put<T>(url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
     const option = this._makeOpt('put', params, opt);
-    return this._handleRequest<T>(func, 'put', url, option, def);
+    return this._handleRequest<T>('put', url, option, def);
   }
 
-  delete<T>(func: string, url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
+  delete<T>(url: string, params?: Params, opt?: IRequestOpt, def?: T): Observable<IResponse<T>> {
     const option = this._makeOpt('delete', params, opt);
-    return this._handleRequest<T>(func, 'delete', url, option, def);
+    return this._handleRequest<T>('delete', url, option, def);
   }
 }

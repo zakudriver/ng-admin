@@ -106,7 +106,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 @Component({
   selector: 'z-article',
   templateUrl: './article.component.html',
-  styleUrls: ['./article.component.styl'],
+  styleUrls: ['./article.component.sass'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0', display: 'none' })),
@@ -122,7 +122,7 @@ export class ArticleComponent implements OnInit {
   constructor(private http: HttpClientService) {}
 
   ontest() {
-    this.http.get('ontest', '/usersvc/logout').subscribe(r => {
+    this.http.get('/usersvc/logout').subscribe(r => {
       console.log(r);
     });
   }

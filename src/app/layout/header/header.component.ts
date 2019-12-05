@@ -1,32 +1,38 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { LayoutService } from '@app/layout/layout.service';
 import { MethodLog } from '@app/core/utils/decorator';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { DialogComponent } from './dialog/dialog.component';
 import { mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { UserService } from '@app/services/user.service';
 
 @Component({
   selector: 'z-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.styl']
+  styleUrls: ['./header.component.sass']
 })
 export class HeaderComponent implements OnInit {
-  constructor(public layoutSer: LayoutService, private _matDialog: MatDialog) {}
+  constructor(
+    public layoutSer: LayoutService,
+    private _matDialog: MatDialog,
+    private _userSer: UserService,
+    private _snackBar: MatSnackBar
+  ) {}
 
   setCollapsedState() {
     this.layoutSer.setCollapsedState(!this.layoutSer.isCollapsed);
   }
 
-  @MethodLog()
   handleLogout() {
-    console.log(this.setCollapsedState);
     const dialogRef = this._matDialog.open(DialogComponent, { width: '250px' });
+
     dialogRef
       .afterClosed()
-      .pipe(mergeMap(() => of(1)))
+      .pipe(mergeMap(() => this._userSer.logout()))
       .subscribe(v => {
-        console.log(v);
+        if (v.msg) {
+          this._snackBar.open(v.msg);
+        }
       });
   }
 

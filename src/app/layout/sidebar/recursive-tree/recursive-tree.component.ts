@@ -15,8 +15,7 @@ import { IMenuTree } from '@app/config/menu.config';
         <li z-menu-item [icon]="i.icon" [routerLink]="[i.path]">{{ i.name }}</li>
       </ng-template>
     </ng-container>
-  `,
-  styleUrls: ['./recursive-tree.component.styl']
+  `
 })
 export class RecursiveTreeComponent implements OnInit {
   @Input()
