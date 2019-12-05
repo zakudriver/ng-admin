@@ -47,11 +47,15 @@ export function MethodLog(printFunc?: typeof console.log): MethodDecorator {
         get() {
           Object.defineProperty(this, propertyKey, {
             enumerable: false,
-            writable: true,
-            configurable: true,
+            writable: false,
+            configurable: false,
             value: (...args: any[]) => {
+              const text = typeof propertyKey === 'string' ? propertyKey : propertyKey.toString();
               const printer = () => {
-                console.log(`%c function: ${propertyKey as string}`, `color:#fff;background:#f44336`);
+                if (printFunc) {
+                  return printFunc(text);
+                }
+                return console.log(`%c function: ${text}`, `color:#fff;background:#f44336`);
               };
 
               const r = descriptor.value.apply(this, args);
@@ -73,7 +77,7 @@ export function MethodLog(printFunc?: typeof console.log): MethodDecorator {
           return this[propertyKey];
         },
         set: value => {
-          console.error("method for [MethodLog] decorator can't set");
+          console.error(`method for [MethodLog] decorator can't set`);
         }
       };
     }

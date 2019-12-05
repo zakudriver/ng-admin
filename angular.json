@@ -10,7 +10,7 @@
       "prefix": "z",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "styl"
+          "style": "sass"
         },
         "@schematics/angular:directive": {},
         "@schematics/angular:module": {
@@ -30,12 +30,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": [
-              "src/app/styles/index.scss",
-              "src/assets/css/materialicons.css",
-              "src/styles.styl",
-              "src/app/styles/index.styl"
-            ],
+            "styles": ["src/app/styles/index.sass", "src/assets/css/materialicons.css", "src/styles.sass"],
             "stylePreprocessorOptions": {
               "includePaths": ["src/app/styles", "src/app/shared/components"]
             },
