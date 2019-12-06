@@ -21,7 +21,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MENU_CONFIG, MenuConfig } from './menu.config';
 import { MenuItemComponent } from './menu-item/menu-item.component';
-import { InputPx } from '@app/core/utils/decorator';
+import { InputPx } from '@app/core/utils/decorators/prop';
 
 export abstract class Parent {
   width: string = '';

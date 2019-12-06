@@ -18,7 +18,7 @@ export class UserService {
     this.redirectUrl = url;
   }
 
-  @HttpClientService.MethodLog()
+  @HttpClientService.MethodAfterLog
   login(params: IKV) {
     return this._http.post('/usersvc/login', params).pipe(
       map(r => {
@@ -30,7 +30,7 @@ export class UserService {
     );
   }
 
-  @HttpClientService.MethodLog()
+  @HttpClientService.MethodAfterLog
   logout() {
     return this._http.get('/usersvc/logout').pipe(
       map(r => {

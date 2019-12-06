@@ -4,7 +4,7 @@ import { LoggerService } from './logger.service';
 import { tap, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
-import { MethodLog } from '../utils/decorator';
+import { MethodAfter, MethodDecoratorFunc } from '../utils/decorators/method';
 
 interface IRequestOpt {
   body?: any;
@@ -35,7 +35,11 @@ type Params =
   providedIn: 'root'
 })
 export class HttpClientService {
-  static MethodLog = MethodLog;
+  static MethodAfterLog = MethodAfter((target, propertyKey, descriptor) => {
+    const text = typeof propertyKey === 'string' ? propertyKey : propertyKey.toString();
+    console.log(`%c function: ${text}`, `color:#fff;background:#f44336`);
+  });
+
   constructor(private _http: HttpClient, private _loggerSer: LoggerService, private _snackBar: MatSnackBar) {}
 
   private _makeOpt(method: string, params: Params | undefined, opt: IRequestOpt | undefined): IRequestOpt {

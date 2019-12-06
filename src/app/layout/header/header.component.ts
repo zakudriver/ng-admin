@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { LayoutService } from '@app/layout/layout.service';
-import { MethodLog } from '@app/core/utils/decorator';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { DialogComponent } from './dialog/dialog.component';
 import { mergeMap } from 'rxjs/operators';
@@ -24,9 +23,8 @@ export class HeaderComponent implements OnInit {
   }
 
   handleLogout() {
-    const dialogRef = this._matDialog.open(DialogComponent, { width: '250px' });
-
-    dialogRef
+    this._matDialog
+      .open(DialogComponent, { width: '250px' })
       .afterClosed()
       .pipe(mergeMap(() => this._userSer.logout()))
       .subscribe(v => {
