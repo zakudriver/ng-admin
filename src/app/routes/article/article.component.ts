@@ -122,9 +122,9 @@ export class ArticleComponent implements OnInit {
   constructor(private http: HttpClientService) {}
 
   ontest() {
-    this.http.get('/usersvc/logout').subscribe(r => {
-      console.log(r);
-    });
+    // this.http.get('/usersvc/logout').subscribe(r => {
+    //   console.log(r);
+    // });
   }
 
   ngOnInit() {}
